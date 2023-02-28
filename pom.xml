@@ -1,0 +1,64 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ru.spectrum.disassembler</groupId>
+  <artifactId>disassembler</artifactId>
+  <version>1.0</version>
+  <build>
+    <plugins>
+	<plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-jar-plugin</artifactId>
+	    <configuration>
+		<archive>
+		    <manifest>
+			<mainClass>
+                ru.zxspectrum.assembler.Disassembler
+            </mainClass>
+		    </manifest>
+		</archive>
+	    </configuration>
+	</plugin>
+    </plugins>
+    <resources>
+      <resource>
+        <directory>src/resources</directory>
+        <includes>
+          <include>**/*.op</include>
+	  <include>**/*.properties</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+  <properties>
+	<java.version>17</java.version>
+	<maven.compiler.source>14</maven.compiler.source>
+	<maven.compiler.target>14</maven.compiler.target>
+  </properties>
+  <dependencies>
+    <dependency>
+	<groupId>org.apache.commons</groupId>
+	<artifactId>commons-text</artifactId>
+	<version>1.3</version>
+    </dependency>
+
+    <dependency>
+	<groupId>org.apache.logging.log4j</groupId>
+	<artifactId>log4j-api</artifactId>
+	<version>2.20.0</version>
+    </dependency>
+
+    <dependency>
+	<groupId>org.apache.logging.log4j</groupId>
+	<artifactId>log4j-core</artifactId>
+	<version>2.20.0</version>
+    </dependency>
+
+    <dependency>
+	<groupId>commons-cli</groupId>
+	<artifactId>commons-cli</artifactId>
+	<version>1.5.0</version>
+    </dependency>
+  </dependencies>
+    
+</project>
