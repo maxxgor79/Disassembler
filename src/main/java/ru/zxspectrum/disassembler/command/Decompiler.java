@@ -64,16 +64,10 @@ public class Decompiler implements DecompilerNamespace {
     private void loadCommandDecompilerTables() throws IOException {
         if (commandDecompilerTable == null) {
             commandDecompilerTable = new CommandDecompilerTable(settings, this);
-            commandDecompilerTable.putAll(loadCommandDecompilerTable(Decompiler.class
-                    .getResourceAsStream("/template/z80/general.op")));
-            commandDecompilerTable.putAll(loadCommandDecompilerTable(Decompiler.class
-                    .getResourceAsStream("/template/z80/extended.op")));
-            commandDecompilerTable.putAll(loadCommandDecompilerTable(Decompiler.class
-                    .getResourceAsStream("/template/z80/bitwise.op")));
-            commandDecompilerTable.putAll(loadCommandDecompilerTable(Decompiler.class
-                    .getResourceAsStream("/template/z80/ix.op")));
-            commandDecompilerTable.putAll(loadCommandDecompilerTable(Decompiler.class
-                    .getResourceAsStream("/template/z80/iy.op")));
+            for (String template : settings.getTemplates()) {
+                commandDecompilerTable.putAll(loadCommandDecompilerTable(Decompiler.class
+                        .getResourceAsStream(template)));
+            }
         }
     }
 
@@ -134,6 +128,7 @@ public class Decompiler implements DecompilerNamespace {
         labelMap.clear();
         elementList.clear();
         labelIndex = 0;
+        address = settings.getDefaultAddress();
     }
 
     private void addFirstLine() {
