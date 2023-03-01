@@ -1,5 +1,11 @@
 package ru.zxspectrum.disassembler;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.zxspectrum.disassembler.command.Decompiler;
@@ -15,6 +21,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,6 +48,7 @@ public class Disassembler implements Settings {
 
     private static int addressDimension = 4;
 
+    private static File outputDirectory = new File("output");
 
 
     public Disassembler() {
@@ -71,6 +79,7 @@ public class Disassembler implements Settings {
                 }
                 templateList.add(value);
             }
+            outputDirectory = new File(Variables.getString(Variables.OUTPUT, "output"));
         } catch (Exception e) {
             logger.debug(e);
         }
@@ -95,30 +104,77 @@ public class Disassembler implements Settings {
 
     public static void main(String[] args) throws IOException {
         try {
+            Options options = getOptions();
             if (args.length == 0) {
-                System.out.println("Usage: disassembler <file1>...<fileN");
+                HelpFormatter formatter = new HelpFormatter();
+                formatter.printHelp("disassembler <file1>...<fileN>", options);
                 return;
             }
+            List<String> fileList = cliPrepare(args, options);
             Disassembler disassembler = new Disassembler();
-            List<File> fileList = new LinkedList<>();
-            for (String fileName : args) {
-                fileList.add(new File(fileName));
+            for (String fileName : fileList) {
+                disassembler.run(new File(fileName));
             }
-            disassembler.run(fileList.toArray(new File[fileList.size()]));
         } catch (Exception e) {
             e.printStackTrace();
             logger.debug(e);
         }
-     }
+    }
 
-     public void run(File ... files) throws IOException {
-         Output.println(createWelcome());
-         Decompiler decompiler = new Decompiler(this);
-         for (File file : files) {
-             String s = decompiler.decompile(file);
-             System.out.print(s);
-         }
-     }
+    private static Options getOptions() {
+        Options options = new Options();
+        options.addOption("a", "address", true, "default address." +
+                " None negative value.");
+        options.addOption("min", "min-address", true, "minimal address." +
+                " None negative value.");
+        options.addOption("max", "max-address", true, "maximal address." +
+                " None negative value.");
+        options.addOption("o", "output", true, "output directory for" +
+                " disassembled files.");
+        options.addOption("b", "byte-order", true, "byte order" +
+                ": little-endian or big-endian.");
+        return options;
+    }
+
+    private static List<String> cliPrepare(String[] args, Options options) {
+        CommandLineParser parser = new DefaultParser();
+
+        try {
+            // parse the command line arguments
+            CommandLine cli = parser.parse(options, args);
+            if (cli.hasOption("a")) {
+                defaultAddress = new BigInteger(cli.getOptionValue("a"));
+            }
+            if (cli.hasOption("min")) {
+                minAddress = new BigInteger(cli.getOptionValue("min"));
+            }
+            if (cli.hasOption("max")) {
+                minAddress = new BigInteger(cli.getOptionValue("max"));
+            }
+            if (cli.hasOption("o")) {
+                outputDirectory = new File(cli.getOptionValue("o"));
+            }
+            if (cli.hasOption("b")) {
+                if ("big-endian".equals(cli.getOptionValue("b"))) {
+                    byteOrder = ByteOrder.BigEndian;
+                } else {
+                    byteOrder = ByteOrder.LittleEndian;
+                }
+            }
+            return cli.getArgList();
+        } catch (ParseException e) {
+            logger.debug(e);
+        }
+        return Collections.emptyList();
+    }
+
+    public void run(File... files) throws IOException {
+        Output.println(createWelcome());
+        Decompiler decompiler = new Decompiler(this);
+        for (File file : files) {
+            decompiler.decompile(file);
+        }
+    }
 
     @Override
     public ByteOrder getByteOrder() {
@@ -168,5 +224,10 @@ public class Disassembler implements Settings {
     @Override
     public Collection<String> getTemplates() {
         return templateList;
+    }
+
+    @Override
+    public File getOutputDirectory() {
+        return outputDirectory;
     }
 }

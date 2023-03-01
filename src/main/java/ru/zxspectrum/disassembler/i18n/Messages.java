@@ -19,6 +19,10 @@ public final class Messages {
 
     public static final String WRITTEN_BY = "writtenBy";
 
+    public static final String SUCCESSFULLY_DISASSEMBLED = "successfullyDisassembled";
+
+    public static final String FILE_SAVED_IN = "fileSavedIn";
+
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("i18n.Messages");
 
     public static String getMessage(String message) {

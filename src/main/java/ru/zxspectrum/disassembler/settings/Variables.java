@@ -33,6 +33,8 @@ public final class Variables {
 
     public static final String COMMENT_TEMPLATE = "comment_template";
 
+    public static final String OUTPUT = "output";
+
 
 
     public static int getInt(String name, int defaultValue) {
@@ -95,7 +97,20 @@ public final class Variables {
         return System.getProperty(name, def);
     }
 
+    public static void setString(String name, String value) {
+        if (name == null) {
+            throw new NullPointerException("name");
+        }
+        if (value == null) {
+            throw new NullPointerException("value");
+        }
+        System.setProperty(name, value);
+    }
+
     public static void load(InputStream is) throws IOException {
+        if (is == null) {
+            throw new NullPointerException("is");
+        }
         System.getProperties().load(is);
     }
 

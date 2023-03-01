@@ -2,6 +2,7 @@ package ru.zxspectrum.disassembler.settings;
 
 import ru.zxspectrum.disassembler.lang.ByteOrder;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.util.Collection;
 
@@ -29,4 +30,6 @@ public interface Settings {
     public String getCommentsTemplate();
 
     public Collection<String> getTemplates();
+
+    public File getOutputDirectory();
 }

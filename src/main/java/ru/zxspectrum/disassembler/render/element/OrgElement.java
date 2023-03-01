@@ -15,6 +15,7 @@ public class OrgElement extends TextElement {
     public OrgElement(BigInteger address, int dimension) {
         addressElement = new AddressElement(address, dimension);
         StringBuilder sb = new StringBuilder();
-        text = sb.append(HEADER).append(TabElement.TAB.generate()).append(addressElement.generate()).toString();
+        text = sb.append(HEADER).append(TabElement.TAB.generate()).append(TabElement.TAB.generate())
+                .append(addressElement.generate()).toString();
     }
 }

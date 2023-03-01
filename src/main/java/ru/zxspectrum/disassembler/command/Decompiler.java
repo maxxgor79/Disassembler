@@ -3,6 +3,8 @@ package ru.zxspectrum.disassembler.command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.zxspectrum.disassembler.error.DecompilerException;
+import ru.zxspectrum.disassembler.i18n.Messages;
+import ru.zxspectrum.disassembler.io.Output;
 import ru.zxspectrum.disassembler.io.PatternLoader;
 import ru.zxspectrum.disassembler.io.PushbackInputStream;
 import ru.zxspectrum.disassembler.render.ElementList;
@@ -13,12 +15,15 @@ import ru.zxspectrum.disassembler.render.element.LabelElement;
 import ru.zxspectrum.disassembler.render.element.OrgElement;
 import ru.zxspectrum.disassembler.render.element.TabElement;
 import ru.zxspectrum.disassembler.settings.Settings;
+import ru.zxspectrum.disassembler.util.FileUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,6 +37,8 @@ import java.util.Map;
  */
 public class Decompiler implements DecompilerNamespace {
     private static final Logger logger = LogManager.getLogger(Decompiler.class.getName());
+
+    private static final String EXT = "asm";
 
     private Settings settings;
     private CommandDecompilerTable commandDecompilerTable;
@@ -71,7 +78,7 @@ public class Decompiler implements DecompilerNamespace {
         }
     }
 
-    public String decompile(File file) throws IOException {
+    public void decompile(File file) throws IOException {
         if (file == null) {
             throw new NullPointerException("file");
 
@@ -111,7 +118,9 @@ public class Decompiler implements DecompilerNamespace {
                 }
             }
             postDecompile();
-            return elementList.generate();
+            Output.println(Messages.getMessage(Messages.SUCCESSFULLY_DISASSEMBLED), file.getAbsolutePath());
+            File destFile = save(file, elementList.generate());
+            Output.println(Messages.getMessage(Messages.FILE_SAVED_IN), destFile.getAbsolutePath());
         } finally {
             if (fis != null) {
                 try {
@@ -122,6 +131,30 @@ public class Decompiler implements DecompilerNamespace {
             }
         }
 
+    }
+
+    private File save(File source, String data) throws IOException {
+        String fileName = source.getName();
+        File outputDir = settings.getOutputDirectory();
+        if (!outputDir.exists()) {
+            outputDir.mkdirs();
+        }
+        File destFile = FileUtil.createNewFileSameName(outputDir, source, EXT);
+        OutputStreamWriter os = null;
+        try {
+            os = new OutputStreamWriter(new FileOutputStream(destFile), settings.getDestEncoding());
+            os.write(data);
+            return destFile;
+        }
+        finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch(Exception e) {
+                    logger.debug(e);
+                }
+            }
+        }
     }
 
     private void resetSettings() {

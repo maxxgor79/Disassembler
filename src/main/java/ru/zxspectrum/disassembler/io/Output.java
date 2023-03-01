@@ -35,8 +35,16 @@ public class Output {
         System.out.println(s);
     }
 
+    public static void println(String format, String ... args) {
+        System.out.println(String.format(format, args));
+    }
+
     public static void print(String s) {
         System.out.print(s);
+    }
+
+    public static void print(String format, String ... args) {
+        System.out.print(String.format(format, args));
     }
 
 }
