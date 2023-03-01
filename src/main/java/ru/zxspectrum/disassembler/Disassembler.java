@@ -1,17 +1,27 @@
 package ru.zxspectrum.disassembler;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.zxspectrum.disassembler.command.Decompiler;
 import ru.zxspectrum.disassembler.i18n.Messages;
 import ru.zxspectrum.disassembler.io.Output;
+import ru.zxspectrum.disassembler.lang.ByteOrder;
+import ru.zxspectrum.disassembler.settings.Settings;
 import ru.zxspectrum.disassembler.util.SymbolUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
-public class Disassembler {
+public class Disassembler implements Settings {
+    private static final Logger logger = LogManager.getLogger(Disassembler.class.getName());
+
     private static String majorVersion = "1";
 
     private static String minorVersion = "0";
+
+    private static ByteOrder byteOrder = ByteOrder.LittleEndian;
 
     private static String createWelcome() {
         StringBuilder sb = new StringBuilder();
@@ -31,8 +41,39 @@ public class Disassembler {
     }
 
     public static void main(String[] args) throws IOException {
-        Output.println(createWelcome());
-        Decompiler decompiler = new Decompiler();
-        decompiler.decompile(new File(args[0]));
+        try {
+            if (args.length == 0) {
+                System.out.println("Usage: disassembler <file1>...<fileN");
+                return;
+            }
+            Disassembler disassembler = new Disassembler();
+            List<File> fileList = new LinkedList<>();
+            for (String fileName : args) {
+                fileList.add(new File(fileName));
+            }
+            disassembler.run(fileList.toArray(new File[fileList.size()]));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.debug(e);
+        }
      }
+
+     public void run(File ... files) throws IOException {
+         Output.println(createWelcome());
+         Decompiler decompiler = new Decompiler(this);
+         for (File file : files) {
+             String s = decompiler.decompile(file);
+             System.out.print(s);
+         }
+     }
+
+    @Override
+    public ByteOrder getByteOrder() {
+        return byteOrder;
+    }
+
+    @Override
+    public int getAddressDimension() {
+        return 4;
+    }
 }

@@ -1,6 +1,7 @@
 package ru.zxspectrum.disassembler.command;
 
 import ru.zxspectrum.disassembler.render.element.CommandElement;
+import ru.zxspectrum.disassembler.settings.Settings;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -14,10 +15,21 @@ import java.util.Map;
 public class CommandDecompilerTable {
     private final Map<String, GroupCommandDecompiler> commandDecompilerMap = new HashMap<>();
 
+    private Settings settings;
+
+    private DecompilerNamespace decompilerNamespace;
+
     private int maxCommandSize;
 
-    public CommandDecompilerTable() {
-
+    public CommandDecompilerTable(Settings settings, DecompilerNamespace decompilerNamespace) {
+        if (settings == null) {
+            throw new NullPointerException("settings");
+        }
+        this.settings = settings;
+        if (decompilerNamespace == null) {
+            throw new NullPointerException("decompilerNamespace");
+        }
+        this.decompilerNamespace = decompilerNamespace;
     }
 
     public boolean put(PatternPair patternPair) {
@@ -30,7 +42,8 @@ public class CommandDecompilerTable {
             groupCommandDecompiler = new GroupCommandDecompiler();
             commandDecompilerMap.put(key, groupCommandDecompiler);
         }
-        ParameterizedCommandDecompiler commandDecompiler = new ParameterizedCommandDecompiler(patternPair);
+        ParameterizedCommandDecompiler commandDecompiler = new ParameterizedCommandDecompiler(patternPair
+                , settings, decompilerNamespace);
         maxCommandSize = Math.max(maxCommandSize, commandDecompiler.size());
         return groupCommandDecompiler.add(commandDecompiler);
     }

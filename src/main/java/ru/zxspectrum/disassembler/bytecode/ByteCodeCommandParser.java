@@ -10,7 +10,6 @@ import ru.zxspectrum.disassembler.util.TypeUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,15 +40,15 @@ public class ByteCodeCommandParser {
         this.byteOrder = byteOrder;
     }
 
-    public Collection<BigInteger> parse(InputStream in) throws IOException {
+    public Collection<ParamResult> parse(InputStream in) throws IOException {
         return parse(new PushbackDataInputStream(in, byteOrder));
     }
 
-    public Collection<BigInteger> parse(PushbackDataInputStream dis) throws IOException {
+    public Collection<ParamResult> parse(PushbackDataInputStream dis) throws IOException {
         if (dis == null) {
             throw new NullPointerException("dis");
         }
-        List<BigInteger> paramList = new LinkedList<>();
+        List<ParamResult> paramList = new LinkedList<>();
         while (true) {
             if (isNextByte()) {
                 int b = readUnsignedByte();
@@ -59,11 +58,12 @@ public class ByteCodeCommandParser {
                 }
             } else {
                 if (isNextParam()) {
-                    Type type = readParamType();
+                    String paramPattern = readParamPattern();
+                    Type type = TypeUtil.getParamPatternType(paramPattern);
                     if (type == Type.Unknown) {
                         throw new ParserException("Unknown type:");
                     }
-                    paramList.add(dis.read(type));
+                    paramList.add(new ParamResult(dis.read(type), paramPattern));
                 } else {
                     break;
                 }
@@ -107,7 +107,7 @@ public class ByteCodeCommandParser {
         return Integer.parseInt(String.format("%c%c", (char) ch1, (char) ch2), 16);
     }
 
-    public Type readParamType() {
+    public String readParamPattern() {
         StringBuilder sb = new StringBuilder();
         int ch = read();
         if (!SymbolUtil.isDollar(ch)) {
@@ -125,7 +125,11 @@ public class ByteCodeCommandParser {
         if (sb.length() == 0) {
             throw new ParserException("parameter is empty");
         }
-        return TypeUtil.getPatternType(sb.toString());
+        return sb.toString();
+    }
+
+    public Type readParamType() {
+        return TypeUtil.getParamPatternType(readParamPattern());
     }
 
     private void pushback() {

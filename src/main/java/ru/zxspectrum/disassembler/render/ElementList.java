@@ -1,16 +1,19 @@
 package ru.zxspectrum.disassembler.render;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
-public class CommandList implements Render {
-    private final List<Line> lines = new LinkedList<>();
+public class ElementList implements Render {
+    private final LinkedList<Line> lines = new LinkedList<>();
 
-    public void add(Line line) {
-        if (line == null) {
+
+    public void add(Line ... lines) {
+        if (lines == null) {
             throw new NullPointerException("line");
         }
-        lines.add(line);
+        this.lines.addAll(Arrays.asList(lines));
     }
 
     public void clear() {
@@ -25,8 +28,12 @@ public class CommandList implements Render {
     public String generate() {
         StringBuilder sb = new StringBuilder();
         for (Line line : lines) {
-            sb.append(line.generate()).append(System.lineSeparator());
+            sb.append(line.generate());
         }
         return sb.toString();
     }
+
+   public ListIterator<Line> getListIterator() {
+        return this.lines.listIterator(0);
+   }
 }

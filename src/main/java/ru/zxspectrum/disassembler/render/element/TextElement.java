@@ -5,7 +5,11 @@ package ru.zxspectrum.disassembler.render.element;
  * Date: 25.02.2023
  */
 public class TextElement implements Element {
-    private String text;
+    protected String text;
+
+    public TextElement() {
+
+    }
 
     public TextElement(String s) {
         if (s == null) {

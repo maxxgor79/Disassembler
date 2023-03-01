@@ -7,4 +7,5 @@ import ru.zxspectrum.disassembler.render.Render;
  * Date: 25.02.2023
  */
 public interface Element extends Render {
+
 }

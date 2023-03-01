@@ -11,20 +11,52 @@ public final class TypeUtil {
 
     }
 
+    public static boolean isAddressPattern(String pattern) {
+        return isPattern(pattern, getAddressPatternSymbol());
+    }
+
+    private static char getAddressPatternSymbol() {
+        return 'a';
+    }
+
+    public static boolean isAddressOffsetPattern(String pattern) {
+        return isPattern(pattern, getAddressOffsetPatternSymbol());
+    }
+
+    private static char getAddressOffsetPatternSymbol() {
+        return 'o';
+    }
+
+    public static boolean isNumberPattern(String pattern) {
+        return isPattern(pattern, getNumberPatternSymbol());
+    }
+
+    private static char getNumberPatternSymbol() {
+        return 'n';
+    }
+
+    public static boolean isOffsetPattern(String pattern) {
+        return isPattern(pattern, getOffsetPatternSymbol());
+    }
+
+    private static char getOffsetPatternSymbol() {
+        return 'd';
+    }
+
     public static boolean isNumberPattenSymbol(int ch) {
-        return ch == 'n';
+        return ch == getNumberPatternSymbol();
     }
 
     public static boolean isAddressPatternSymbol(int ch) {
-        return ch == 'a';
+        return ch == getAddressPatternSymbol();
     }
 
     public static boolean isAddressOffsetPatternSymbol(int ch) {
-        return ch == 'o';
+        return ch == getAddressOffsetPatternSymbol();
     }
 
     public static boolean isOffsetPatternSymbol(int ch) {
-        return ch == 'd';
+        return ch == getOffsetPatternSymbol();
     }
 
     private static int getPatternSymbolCount(String s, int ch) {
@@ -38,22 +70,22 @@ public final class TypeUtil {
     }
 
     public static int getNumberPatternSymbolCount(String s) {
-        return getPatternSymbolCount(s, 'n');
+        return getPatternSymbolCount(s, getNumberPatternSymbol());
     }
 
     public static int getAddressPatternSymbolCount(String s) {
-        return getPatternSymbolCount(s, 'a');
+        return getPatternSymbolCount(s, getAddressPatternSymbol());
     }
 
     public static int getOffsetPatternSymbolCount(String s) {
-        return getPatternSymbolCount(s, 'd');
+        return getPatternSymbolCount(s, getOffsetPatternSymbol());
     }
 
     public static int getAddressOffsetPatternSymbolCount(String s) {
-        return getPatternSymbolCount(s, 'o');
+        return getPatternSymbolCount(s, getAddressOffsetPatternSymbol());
     }
 
-    public static Type getPatternType(String s) {
+    public static Type getParamPatternType(String s) {
         if (s == null || s.isEmpty()) {
             return Type.Unknown;
         }
@@ -90,4 +122,16 @@ public final class TypeUtil {
         return Type.Unknown;
     }
 
+    private static boolean isPattern(String pattern, char patternLetter) {
+        if (pattern == null) {
+            throw new IllegalArgumentException("pattern is null");
+        }
+        String name = pattern.toLowerCase();
+        for (int i = 0; i < name.length(); i++) {
+            if (name.charAt(i) != patternLetter) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
