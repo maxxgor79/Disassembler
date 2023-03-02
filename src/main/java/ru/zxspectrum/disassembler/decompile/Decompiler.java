@@ -1,7 +1,10 @@
-package ru.zxspectrum.disassembler.command;
+package ru.zxspectrum.disassembler.decompile;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.zxspectrum.disassembler.bytecode.ParamResult;
+import ru.zxspectrum.disassembler.command.CommandDecompilerTable;
+import ru.zxspectrum.disassembler.command.PatternPair;
 import ru.zxspectrum.disassembler.error.DecompilerException;
 import ru.zxspectrum.disassembler.i18n.Messages;
 import ru.zxspectrum.disassembler.io.Output;
@@ -45,7 +48,9 @@ public class Decompiler implements DecompilerNamespace {
 
     private BigInteger address = BigInteger.ZERO;
 
-    private Map<BigInteger, String> labelMap = new HashMap<>();
+    private Map<BigInteger, LabelInfo> labelMap = new HashMap<>();
+
+    private Map<BigInteger, CommandDecompiler> requestedLabelMap = new HashMap<>();
 
     private ElementList elementList = new ElementList();
 
@@ -145,12 +150,11 @@ public class Decompiler implements DecompilerNamespace {
             os = new OutputStreamWriter(new FileOutputStream(destFile), settings.getDestEncoding());
             os.write(data);
             return destFile;
-        }
-        finally {
+        } finally {
             if (os != null) {
                 try {
                     os.close();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     logger.debug(e);
                 }
             }
@@ -160,7 +164,8 @@ public class Decompiler implements DecompilerNamespace {
     private void resetSettings() {
         labelMap.clear();
         elementList.clear();
-        labelIndex = 0;
+        requestedLabelMap.clear();
+        labelIndex = 1;
         address = settings.getDefaultAddress();
     }
 
@@ -182,22 +187,48 @@ public class Decompiler implements DecompilerNamespace {
     }
 
     @Override
-    public String addLabelAddress(BigInteger address) {
+    public String addLabelAddress(BigInteger address, boolean required) {
         if (address == null) {
             throw new NullPointerException("address");
         }
-        String name = labelMap.get(address);
-        if (name != null) {
-            return name;
+        LabelInfo labelInfo = labelMap.get(address);
+        if (labelInfo != null) {
+            return labelInfo.getName();
         }
-        name = generateLabelName();
-        labelMap.put(address, name);
-        return name;
+        String generatedName = generateLabelName();
+        labelMap.put(address, new LabelInfo(generatedName, required));
+        return generatedName;
     }
 
-    private static String generateLabelName() {
-        String name = String.format("label%06d", labelIndex++);
-        return name;
+    @Override
+    public void addRequestedLabel(BigInteger address, String mask, Collection<ParamResult> params) {
+        if (address == null) {
+            throw new NullPointerException("address");
+        }
+        if (mask == null) {
+            throw new NullPointerException("mask");
+        }
+        if (params == null) {
+            throw new NullPointerException("params");
+        }
+        CommandDecompiler commandDecompiler = new CommandDecompiler(this, address, mask, params);
+        requestedLabelMap.put(address, commandDecompiler);
+    }
+
+    @Override
+    public String getLabel(BigInteger address) {
+        if (address == null) {
+            return null;
+        }
+        LabelInfo labelInfo = labelMap.get(address);
+        if (labelInfo == null) {
+            return null;
+        }
+        return labelInfo.getName();
+    }
+
+    private String generateLabelName() {
+        return String.format("label_%0" + settings.getAddressDimension() + "d", labelIndex++);
     }
 
     protected void setAddress(BigInteger address) {
@@ -215,19 +246,67 @@ public class Decompiler implements DecompilerNamespace {
     }
 
     private void postDecompile() {
+        processLabels();
+        decompileCommands();
+    }
+
+    private void processLabels() {
+        Map<BigInteger, LabelInfo> existedLabelMap = new HashMap<>();
         ListIterator<Line> lineListIterator = elementList.getListIterator();
         while (lineListIterator.hasNext()) {
             Line line = lineListIterator.next();
             if (line.getAddressElement() != null) {
-                BigInteger address = line.getAddressElement().getAddress();
-                String labelName = labelMap.get(address);
-                if (labelName != null) {
-                    Line labelLine = new Line(null, new LabelElement(labelName));
-                    lineListIterator.set(labelLine);
-                    lineListIterator.add(line);
-                    labelMap.remove(address);
-                }
+                processLabel(existedLabelMap, lineListIterator, line);
             }
+        }
+        labelMap.clear();
+        labelMap.putAll(existedLabelMap);//leave only existed labels
+    }
+
+    private void processLabel(Map<BigInteger, LabelInfo> existedLabelMap, ListIterator<Line> lineListIterator, Line line) {
+        LabelInfo labelInfo = labelMap.get(line.getAddressElement().getAddress());
+        if (labelInfo != null) {
+            existedLabelMap.put(line.getAddressElement().getAddress(), labelInfo);
+            Line labelLine = new Line(null, new LabelElement(labelInfo.getName()));
+            lineListIterator.set(labelLine);
+            lineListIterator.add(line);
+        }
+    }
+
+    private void decompileCommands() {
+        ListIterator<Line> lineListIterator = elementList.getListIterator();
+        while (lineListIterator.hasNext()) {
+            Line line = lineListIterator.next();
+            if (line.getAddressElement() != null) {
+                updateCommand(line);
+            }
+        }
+    }
+
+    private void updateCommand(Line line) {
+        CommandDecompiler commandDecompiler = this.requestedLabelMap.get(line.getAddressElement().getAddress());
+        if (commandDecompiler != null) {
+            String result = commandDecompiler.render();
+            line.replace(CommandElement.class, new CommandElement(result, 1));
+        }
+    }
+
+    static class LabelInfo {
+        private String name;
+
+        private boolean required;
+
+        LabelInfo(String name, boolean required) {
+            this.name = name;
+            this.required = required;
+        }
+
+        String getName() {
+            return name;
+        }
+
+        boolean isRequired() {
+            return required;
         }
     }
 }

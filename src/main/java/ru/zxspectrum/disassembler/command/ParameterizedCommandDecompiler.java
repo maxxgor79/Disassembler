@@ -2,6 +2,7 @@ package ru.zxspectrum.disassembler.command;
 
 import ru.zxspectrum.disassembler.bytecode.ByteCodeCommandParser;
 import ru.zxspectrum.disassembler.bytecode.ParamResult;
+import ru.zxspectrum.disassembler.decompile.DecompilerNamespace;
 import ru.zxspectrum.disassembler.io.PushbackDataInputStream;
 import ru.zxspectrum.disassembler.lang.Type;
 import ru.zxspectrum.disassembler.render.element.CommandElement;
@@ -53,7 +54,7 @@ public class ParameterizedCommandDecompiler implements CommandDecompiler {
         ByteCodeCommandParser parser = new ByteCodeCommandParser(patternPair.getCodePattern()
                 , settings.getByteOrder());
         Collection<ParamResult> args = parser.parse(dis);
-        return new CommandElement(format(patternPair.getCommandPattern(), args), size);
+        return new CommandElement(render(args), size);
     }
 
     @Override
@@ -88,34 +89,40 @@ public class ParameterizedCommandDecompiler implements CommandDecompiler {
         return size;
     }
 
-    public String format(String mask, Collection<ParamResult> args) {
-        if (mask == null) {
-            return null;
+    private String render(Collection<ParamResult> params) {
+        if (params == null) {
+            throw new NullPointerException("params");
         }
-        if (args == null) {
-            throw new NullPointerException("args");
-        }
+        String mask = patternPair.getCommandPattern();
         StringBuilder sb = new StringBuilder();
         Scanner scanner = new Scanner(mask);
         scanner.useDelimiter("[$][ando]+");
-        Iterator<ParamResult> iterator = args.iterator();
+        Iterator<ParamResult> iterator = params.iterator();
         while(scanner.hasNext()) {
             String s = scanner.next();
             sb.append(s);
             if (iterator.hasNext()) {
-                ParamResult result  = iterator.next();
-                sb.append(formatParameter(result));
+                ParamResult param  = iterator.next();
+                renderParameter(sb, param, params);
             }
         }
         return sb.toString();
     }
 
-    private String formatParameter(ParamResult result) {
-        if (TypeUtil.isAddressOffsetPattern(result.getPatternParam())) {
-            BigInteger finalAddress = decompilerNamespace.getAddress().add(result.getValue());
-            return decompilerNamespace.addLabelAddress(finalAddress);
+    private void renderParameter(StringBuilder sb, ParamResult param, Collection<ParamResult> params) {
+        BigInteger value = param.getValue();
+        if (TypeUtil.isAddressOffsetPattern(param.getPatternParam())) {
+            value = decompilerNamespace.getAddress().add(param.getValue());//relative address
+            decompilerNamespace.addLabelAddress(value, true);
+            decompilerNamespace.addRequestedLabel(decompilerNamespace.getAddress(), patternPair.getCommandPattern()
+                    , params);
         } else {
-            return ConverterUtil.toTextHexadecimal(result.getValue(), "$", null);
+            if (TypeUtil.isAddressPattern(param.getPatternParam())) {
+                decompilerNamespace.addLabelAddress(value, false);//absolute address
+                decompilerNamespace.addRequestedLabel(decompilerNamespace.getAddress(), patternPair.getCommandPattern()
+                        , params);
+            }
         }
+        sb.append(ConverterUtil.toTextHexadecimal(value, "$", null));
     }
 }

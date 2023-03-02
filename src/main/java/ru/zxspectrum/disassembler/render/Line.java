@@ -7,6 +7,8 @@ import ru.zxspectrum.disassembler.render.element.Element;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 public class Line implements Render {
 
@@ -53,5 +55,24 @@ public class Line implements Render {
 
     public Element getLast() {
         return elementList.getLast();
+    }
+
+    public Collection<Element> replace(Class<? extends Element> clazz, Element newElement) {
+        if (clazz == null) {
+            throw new NullPointerException("clazz");
+        }
+        if (newElement == null) {
+            throw new NullPointerException("newElement");
+        }
+        ListIterator<Element> listIterator = elementList.listIterator(0);
+        List<Element> removedList = new LinkedList<>();
+        while(listIterator.hasNext()) {
+            Element e = listIterator.next();
+            if (e.getClass() == clazz) {
+                removedList.add(e);
+                listIterator.set(newElement);
+            }
+        }
+        return removedList;
     }
 }

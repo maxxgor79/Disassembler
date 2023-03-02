@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.command;
 
+import ru.zxspectrum.disassembler.decompile.DecompilerNamespace;
 import ru.zxspectrum.disassembler.render.element.CommandElement;
 import ru.zxspectrum.disassembler.settings.Settings;
 

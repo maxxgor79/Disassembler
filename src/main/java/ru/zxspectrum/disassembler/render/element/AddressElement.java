@@ -18,7 +18,7 @@ public class AddressElement extends TextElement {
         if (dimension <= 0) {
             throw new IllegalArgumentException("dimension <= 0");
         }
-        text = String.format("%0" + dimension + "X", address);
+        text = String.format("$%0" + dimension + "X", address);
     }
 
     public BigInteger getAddress() {

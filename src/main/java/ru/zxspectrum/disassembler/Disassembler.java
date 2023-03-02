@@ -8,7 +8,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.zxspectrum.disassembler.command.Decompiler;
+import ru.zxspectrum.disassembler.decompile.Decompiler;
 import ru.zxspectrum.disassembler.i18n.Messages;
 import ru.zxspectrum.disassembler.io.Output;
 import ru.zxspectrum.disassembler.lang.ByteOrder;
@@ -62,11 +62,7 @@ public class Disassembler implements Settings {
             minorVersion = Variables.getString(Variables.MINOR_VERSION, minorVersion);
             destEncoding = Variables.getString(Variables.DEST_ENCODING, destEncoding);
             String value = Variables.getString(Variables.BYTE_ORDER, "little-endian");
-            if ("big-endian".equals(value)) {
-                byteOrder = ByteOrder.BigEndian;
-            } else {
-                byteOrder = ByteOrder.LittleEndian;
-            }
+            byteOrder = "big-endian".equals(value) ? ByteOrder.BigEndian : ByteOrder.LittleEndian;
             defaultAddress = Variables.getBigInteger(Variables.DEFAULT_ADDRESS, defaultAddress);
             minAddress = Variables.getBigInteger(Variables.MIN_ADDRESS, minAddress);
             maxAddress = Variables.getBigInteger(Variables.MAX_ADDRESS, maxAddress);
@@ -110,7 +106,7 @@ public class Disassembler implements Settings {
                 formatter.printHelp("disassembler <file1>...<fileN>", options);
                 return;
             }
-            List<String> fileList = cliPrepare(args, options);
+            List<String> fileList = cliParsing(args, options);
             Disassembler disassembler = new Disassembler();
             for (String fileName : fileList) {
                 disassembler.run(new File(fileName));
@@ -136,7 +132,7 @@ public class Disassembler implements Settings {
         return options;
     }
 
-    private static List<String> cliPrepare(String[] args, Options options) {
+    private static List<String> cliParsing(String[] args, Options options) {
         CommandLineParser parser = new DefaultParser();
 
         try {
@@ -155,11 +151,8 @@ public class Disassembler implements Settings {
                 outputDirectory = new File(cli.getOptionValue("o"));
             }
             if (cli.hasOption("b")) {
-                if ("big-endian".equals(cli.getOptionValue("b"))) {
-                    byteOrder = ByteOrder.BigEndian;
-                } else {
-                    byteOrder = ByteOrder.LittleEndian;
-                }
+                byteOrder = "big-endian".equals(cli.getOptionValue("b")) ? ByteOrder.BigEndian :
+                        ByteOrder.LittleEndian;
             }
             return cli.getArgList();
         } catch (ParseException e) {
