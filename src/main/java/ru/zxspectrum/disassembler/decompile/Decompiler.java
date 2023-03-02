@@ -14,6 +14,8 @@ import ru.zxspectrum.disassembler.render.ElementList;
 import ru.zxspectrum.disassembler.render.Line;
 import ru.zxspectrum.disassembler.render.element.AddressElement;
 import ru.zxspectrum.disassembler.render.element.CommandElement;
+import ru.zxspectrum.disassembler.render.element.DbElement;
+import ru.zxspectrum.disassembler.render.element.Element;
 import ru.zxspectrum.disassembler.render.element.LabelElement;
 import ru.zxspectrum.disassembler.render.element.OrgElement;
 import ru.zxspectrum.disassembler.render.element.TabElement;
@@ -106,9 +108,10 @@ public class Decompiler implements DecompilerNamespace {
                 }
                 baos.reset();
                 int i = 0;
+                CommandElement commandElement = null;
                 for (; i < readBytes; i++) {
                     baos.write(commandData[i]);
-                    CommandElement commandElement = commandDecompilerTable.generate(baos.toByteArray(), commandData);
+                    commandElement = commandDecompilerTable.generate(baos.toByteArray(), commandData);
                     if (commandElement != null) {
                         byte[] data = Arrays.copyOfRange(commandData, commandElement.getByteCodeSize()
                                 , readBytes);
@@ -118,8 +121,12 @@ public class Decompiler implements DecompilerNamespace {
                         break;
                     }
                 }
-                if (i >= readBytes) {
-                    throw new DecompilerException("Command is not found");
+                if (commandElement == null) {
+                    byte[] data = Arrays.copyOfRange(commandData, 1
+                            , readBytes);
+                    pis.pushback(data);
+                    addLine(getAddress(), new DbElement(commandData[0]));
+                    incrementAddress(1);
                 }
             }
             postDecompile();
@@ -174,7 +181,7 @@ public class Decompiler implements DecompilerNamespace {
         elementList.add(new Line(null, orgElement));
     }
 
-    private void addLine(BigInteger address, CommandElement commandElement) {
+    private void addLine(BigInteger address, Element commandElement) {
         AddressElement addressElement = new AddressElement(address, settings.getAddressDimension());
         addressElement.setVisible(settings.isAddressVisible());
         Line line = new Line(addressElement, TabElement.TAB, TabElement.TAB, commandElement);

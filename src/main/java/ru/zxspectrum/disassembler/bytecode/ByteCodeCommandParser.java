@@ -1,5 +1,7 @@
 package ru.zxspectrum.disassembler.bytecode;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.zxspectrum.disassembler.error.MatchException;
 import ru.zxspectrum.disassembler.error.ParserException;
 import ru.zxspectrum.disassembler.io.PushbackDataInputStream;
@@ -19,6 +21,8 @@ import java.util.List;
  * Date: 25.02.2023
  */
 public class ByteCodeCommandParser {
+    private static final Logger logger = LogManager.getLogger(ByteCodeCommandParser.class.getName());
+
     private String codePattern;
 
     private ByteOrder byteOrder;
@@ -54,7 +58,7 @@ public class ByteCodeCommandParser {
                 int b = readUnsignedByte();
                 int b1 = dis.readUnsignedByte();
                 if (b != b1) {
-                    throw new MatchException();
+                    throw new MatchException("b=" + b + "b1=" + b1);
                 }
             } else {
                 if (isNextParam()) {

@@ -102,6 +102,7 @@ public class Disassembler implements Settings {
 
     public static void main(String[] args) throws IOException {
         try {
+            Disassembler disassembler = new Disassembler();
             Options options = getOptions();
             if (args.length == 0) {
                 HelpFormatter formatter = new HelpFormatter();
@@ -109,7 +110,6 @@ public class Disassembler implements Settings {
                 return;
             }
             List<String> fileList = cliParsing(args, options);
-            Disassembler disassembler = new Disassembler();
             for (String fileName : fileList) {
                 disassembler.run(new File(fileName));
             }

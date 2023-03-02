@@ -22,6 +22,7 @@ ED44	NEG
 ED45	RETN
 ED46	IM 0
 ED56	IM 1
+ED5E	IM 2
 ED47	LD I,A
 ED57	LD A,I
 ED67	RRD
@@ -49,11 +50,11 @@ ED4D	RETI
 ED4F	LD R,A
 ED5F	LD A,R
 ED6F	RLD
-43$aa	LD ($aa),BC
-53$aa	LD ($aa),DE
-63$aa	LD ($aa),HL
-73$aa	LD ($aa),SP
-4B$aa	LD BC,($aa)
-5B$aa	LD DE,($aa)
-6B$aa	LD HL,($aa)
-7B$aa	LD SP,($aa)
+ED43$aa	LD ($aa),BC
+ED53$aa	LD ($aa),DE
+ED63$aa	LD ($aa),HL
+ED73$aa	LD ($aa),SP
+ED4B$aa	LD BC,($aa)
+ED5B$aa	LD DE,($aa)
+ED6B$aa	LD HL,($aa)
+ED7B$aa	LD SP,($aa)
