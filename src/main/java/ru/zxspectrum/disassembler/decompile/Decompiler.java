@@ -176,6 +176,7 @@ public class Decompiler implements DecompilerNamespace {
 
     private void addLine(BigInteger address, CommandElement commandElement) {
         AddressElement addressElement = new AddressElement(address, settings.getAddressDimension());
+        addressElement.setVisible(settings.isAddressVisible());
         Line line = new Line(addressElement, TabElement.TAB, TabElement.TAB, commandElement);
         elementList.add(line);
     }

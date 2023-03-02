@@ -50,6 +50,8 @@ public class Disassembler implements Settings {
 
     private static File outputDirectory = new File("output");
 
+    private static boolean visibleAddress;
+
 
     public Disassembler() {
         loadSettings();
@@ -129,6 +131,7 @@ public class Disassembler implements Settings {
                 " disassembled files.");
         options.addOption("b", "byte-order", true, "byte order" +
                 ": little-endian or big-endian.");
+        options.addOption("v", "visible", false, "Show or not address in decompiled file.");
         return options;
     }
 
@@ -153,6 +156,9 @@ public class Disassembler implements Settings {
             if (cli.hasOption("b")) {
                 byteOrder = "big-endian".equals(cli.getOptionValue("b")) ? ByteOrder.BigEndian :
                         ByteOrder.LittleEndian;
+            }
+            if (cli.hasOption("v")) {
+                visibleAddress = true;
             }
             return cli.getArgList();
         } catch (ParseException e) {
@@ -222,5 +228,10 @@ public class Disassembler implements Settings {
     @Override
     public File getOutputDirectory() {
         return outputDirectory;
+    }
+
+    @Override
+    public boolean isAddressVisible() {
+        return visibleAddress;
     }
 }

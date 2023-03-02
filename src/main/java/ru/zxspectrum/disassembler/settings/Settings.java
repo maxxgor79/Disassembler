@@ -32,4 +32,6 @@ public interface Settings {
     public Collection<String> getTemplates();
 
     public File getOutputDirectory();
+
+    public boolean isAddressVisible();
 }

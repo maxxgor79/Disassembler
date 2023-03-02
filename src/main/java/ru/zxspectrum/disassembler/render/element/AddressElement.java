@@ -8,7 +8,8 @@ import java.math.BigInteger;
  */
 public class AddressElement extends TextElement {
     private BigInteger address;
-    private String format;
+
+    private boolean visible = true;
 
     public AddressElement(BigInteger address, int dimension) {
         if (address == null) {
@@ -23,5 +24,18 @@ public class AddressElement extends TextElement {
 
     public BigInteger getAddress() {
         return this.address;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    @Override
+    public String generate() {
+        return visible ? text : "";
     }
 }
