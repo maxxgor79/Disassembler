@@ -11,6 +11,8 @@ public class Output {
 
     private static final String FORMAT2 = "%s : [%d] %s";
 
+    private static final String FORMAT3 = "%s : %s";
+
     public static String errorFormat(String sourceName, int line, String message, Object ... args) {
         String error = Messages.getMessage(Messages.ERROR);
         return String.format(FORMAT1, error, sourceName, line, String.format(message, args));
@@ -21,14 +23,24 @@ public class Output {
         return String.format(FORMAT2, error, line, String.format(message, args));
     }
 
+    public static String errorFormat(String message, Object ... args) {
+        String error = Messages.getMessage(Messages.ERROR);
+        return String.format(FORMAT3, error, String.format(message, args));
+    }
+
     public static String warningFormat(String sourceName, int line, String message, Object ... args) {
-        String error = Messages.getMessage(Messages.WARNING);
-        return String.format(FORMAT1, error, sourceName, line, String.format(message, args));
+        String warning = Messages.getMessage(Messages.WARNING);
+        return String.format(FORMAT2, warning, sourceName, line, String.format(message, args));
     }
 
     public static String warningFormat(int line, String message, Object ... args) {
-        String error = Messages.getMessage(Messages.WARNING);
-        return String.format(FORMAT2, error, line, String.format(message, args));
+        String warning = Messages.getMessage(Messages.WARNING);
+        return String.format(FORMAT2, warning, line, String.format(message, args));
+    }
+
+    public static String warningFormat(String message, Object ... args) {
+        String warning = Messages.getMessage(Messages.WARNING);
+        return String.format(FORMAT3, warning, String.format(message, args));
     }
 
     public static void println(String s) {

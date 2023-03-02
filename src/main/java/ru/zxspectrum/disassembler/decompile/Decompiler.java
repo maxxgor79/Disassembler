@@ -122,6 +122,7 @@ public class Decompiler implements DecompilerNamespace {
                     }
                 }
                 if (commandElement == null) {
+                    Output.println(Output.warningFormat(Messages.getMessage(Messages.UNKNOWN_COMMAND_CODE), commandData[0]));
                     byte[] data = Arrays.copyOfRange(commandData, 1
                             , readBytes);
                     pis.pushback(data);

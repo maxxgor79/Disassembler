@@ -3,6 +3,7 @@ package ru.zxspectrum.disassembler.i18n;
 import java.util.ResourceBundle;
 
 public final class Messages {
+
     private Messages() {
 
     }
@@ -22,6 +23,8 @@ public final class Messages {
     public static final String SUCCESSFULLY_DISASSEMBLED = "successfullyDisassembled";
 
     public static final String FILE_SAVED_IN = "fileSavedIn";
+
+    public static final String UNKNOWN_COMMAND_CODE = "unknownCommandCode";
 
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("i18n.Messages");
 
