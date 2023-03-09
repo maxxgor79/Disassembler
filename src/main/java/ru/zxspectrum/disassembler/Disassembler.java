@@ -122,11 +122,11 @@ public class Disassembler implements Settings {
     private static Options getOptions() {
         Options options = new Options();
         options.addOption("a", "address", true, "default address." +
-                " None negative value.");
+                " Non negative value.");
         options.addOption("min", "min-address", true, "minimal address." +
-                " None negative value.");
+                " Non negative value.");
         options.addOption("max", "max-address", true, "maximal address." +
-                " None negative value.");
+                " Non negative value.");
         options.addOption("o", "output", true, "output directory for" +
                 " disassembled files.");
         options.addOption("b", "byte-order", true, "byte order" +
