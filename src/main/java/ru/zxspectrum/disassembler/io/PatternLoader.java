@@ -50,7 +50,7 @@ public class PatternLoader {
             throw new NullPointerException("charset");
         }
         Scanner scanner = new Scanner(is, charset);
-        scanner.useDelimiter("[\t\r\n]");
+        scanner.useDelimiter("[\t\n]");
         int lineNumber = 1;
         String codePattern = null;
         String commandPattern = null;
