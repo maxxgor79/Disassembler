@@ -1,7 +1,7 @@
 package ru.zxspectrum.disassembler.decompile;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.zxspectrum.disassembler.bytecode.ParamResult;
 import ru.zxspectrum.disassembler.command.CommandDecompilerTable;
 import ru.zxspectrum.disassembler.command.PatternPair;
@@ -41,7 +41,7 @@ import java.util.Map;
  * Date: 26.02.2023
  */
 public class Decompiler implements DecompilerNamespace {
-    private static final Logger logger = LogManager.getLogger(Decompiler.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Decompiler.class);
 
     private static final String EXT = "asm";
 
@@ -66,7 +66,7 @@ public class Decompiler implements DecompilerNamespace {
         try {
             loadCommandDecompilerTables();
         } catch (IOException e) {
-            logger.debug(e);
+            LOGGER.debug(e.getMessage());
         }
     }
 
@@ -139,7 +139,7 @@ public class Decompiler implements DecompilerNamespace {
                 try {
                     fis.close();
                 } catch (Exception e) {
-                    logger.debug(e);
+                    LOGGER.debug(e.getMessage());
                 }
             }
         }
@@ -163,7 +163,7 @@ public class Decompiler implements DecompilerNamespace {
                 try {
                     os.close();
                 } catch (Exception e) {
-                    logger.debug(e);
+                    LOGGER.debug(e.getMessage());
                 }
             }
         }

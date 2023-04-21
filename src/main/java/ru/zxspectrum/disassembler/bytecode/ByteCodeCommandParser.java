@@ -1,7 +1,7 @@
 package ru.zxspectrum.disassembler.bytecode;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.zxspectrum.disassembler.error.MatchException;
 import ru.zxspectrum.disassembler.error.ParserException;
 import ru.zxspectrum.disassembler.io.PushbackDataInputStream;
@@ -21,7 +21,7 @@ import java.util.List;
  * Date: 25.02.2023
  */
 public class ByteCodeCommandParser {
-    private static final Logger logger = LogManager.getLogger(ByteCodeCommandParser.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ByteCodeCommandParser.class);
 
     private String codePattern;
 

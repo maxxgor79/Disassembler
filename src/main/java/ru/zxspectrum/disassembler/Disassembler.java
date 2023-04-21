@@ -6,8 +6,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.zxspectrum.disassembler.decompile.Decompiler;
 import ru.zxspectrum.disassembler.i18n.Messages;
 import ru.zxspectrum.disassembler.io.Output;
@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Disassembler implements Settings {
-    private static final Logger logger = LogManager.getLogger(Disassembler.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Disassembler.class);
 
     private static String majorVersion = "1";
 
@@ -79,7 +79,7 @@ public class Disassembler implements Settings {
             }
             outputDirectory = new File(Variables.getString(Variables.OUTPUT, "output"));
         } catch (Exception e) {
-            logger.debug(e);
+            LOGGER.debug(e.getMessage());
         }
     }
 
@@ -115,7 +115,7 @@ public class Disassembler implements Settings {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug(e);
+            LOGGER.debug(e.getMessage());
         }
     }
 
@@ -162,7 +162,7 @@ public class Disassembler implements Settings {
             }
             return cli.getArgList();
         } catch (ParseException e) {
-            logger.debug(e);
+            LOGGER.debug(e.getMessage());
         }
         return Collections.emptyList();
     }
