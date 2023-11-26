@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.command;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.zxspectrum.disassembler.bytecode.ByteCodeCommandParser;
 import ru.zxspectrum.disassembler.bytecode.ParamResult;
 import ru.zxspectrum.disassembler.decompile.DecompilerNamespace;
@@ -21,6 +22,7 @@ import java.util.Scanner;
  * @Author: Maxim Gorin
  * Date: 25.02.2023
  */
+@Slf4j
 public class ParameterizedCommandDecompiler implements CommandDecompiler {
     private PatternPair patternPair;
 

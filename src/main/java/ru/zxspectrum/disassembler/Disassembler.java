@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -25,12 +26,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+@Slf4j
 public class Disassembler implements Settings {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Disassembler.class);
-
     private static String majorVersion = "1";
 
-    private static String minorVersion = "0";
+    private static String minorVersion = "1";
 
     private static String destEncoding = Charset.defaultCharset().name();
 
@@ -79,7 +79,7 @@ public class Disassembler implements Settings {
             }
             outputDirectory = new File(Variables.getString(Variables.OUTPUT, "output"));
         } catch (Exception e) {
-            LOGGER.debug(e.getMessage());
+            log.debug(e.getMessage());
         }
     }
 
@@ -115,7 +115,7 @@ public class Disassembler implements Settings {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.debug(e.getMessage());
+            log.debug(e.getMessage());
         }
     }
 
@@ -162,7 +162,7 @@ public class Disassembler implements Settings {
             }
             return cli.getArgList();
         } catch (ParseException e) {
-            LOGGER.debug(e.getMessage());
+            log.debug(e.getMessage());
         }
         return Collections.emptyList();
     }

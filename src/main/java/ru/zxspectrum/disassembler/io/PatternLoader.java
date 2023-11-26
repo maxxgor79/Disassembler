@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.io;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.zxspectrum.disassembler.command.PatternPair;
 import ru.zxspectrum.disassembler.error.ParserException;
 import ru.zxspectrum.disassembler.i18n.Messages;
@@ -17,6 +18,7 @@ import java.util.Scanner;
  * @Author: Maxim Gorin
  * Date: 25.02.2023
  */
+@Slf4j
 public class PatternLoader {
     public Collection<PatternPair> load(InputStream is) throws IOException {
         return load(is, Charset.defaultCharset());
@@ -67,8 +69,12 @@ public class PatternLoader {
                 lineNumber++;
             }
         } catch(NoSuchElementException e) {
+            log.error("[" + lineNumber + "]: " + e.getMessage(), e);
             throw new ParserException(lineNumber, Messages.getMessage(Messages.INVALID_COMMAND_TABLE_FORMAT)
                     , String.format("%s\t%s"), codePattern, commandPattern);
+        }
+        catch (RuntimeException e) {
+            log.error("[" + lineNumber + "]: " + e.getMessage(), e);
         }
         return resultList;
     }

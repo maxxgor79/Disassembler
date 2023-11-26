@@ -58,7 +58,7 @@ public class ByteCodeCommandParser {
                 int b = readUnsignedByte();
                 int b1 = dis.readUnsignedByte();
                 if (b != b1) {
-                    throw new MatchException("b=" + b + "b1=" + b1);
+                    throw new MatchException("b=" + b + ",b1=" + b1);
                 }
             } else {
                 if (isNextParam()) {

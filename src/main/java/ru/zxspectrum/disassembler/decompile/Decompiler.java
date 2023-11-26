@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.decompile;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.zxspectrum.disassembler.bytecode.ParamResult;
@@ -40,9 +41,8 @@ import java.util.Map;
  * @Author: Maxim Gorin
  * Date: 26.02.2023
  */
+@Slf4j
 public class Decompiler implements DecompilerNamespace {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Decompiler.class);
-
     private static final String EXT = "asm";
 
     private Settings settings;
@@ -66,7 +66,7 @@ public class Decompiler implements DecompilerNamespace {
         try {
             loadCommandDecompilerTables();
         } catch (IOException e) {
-            LOGGER.debug(e.getMessage());
+            log.debug(e.getMessage());
         }
     }
 
@@ -139,7 +139,7 @@ public class Decompiler implements DecompilerNamespace {
                 try {
                     fis.close();
                 } catch (Exception e) {
-                    LOGGER.debug(e.getMessage());
+                    log.debug(e.getMessage());
                 }
             }
         }
@@ -163,7 +163,7 @@ public class Decompiler implements DecompilerNamespace {
                 try {
                     os.close();
                 } catch (Exception e) {
-                    LOGGER.debug(e.getMessage());
+                    log.debug(e.getMessage());
                 }
             }
         }

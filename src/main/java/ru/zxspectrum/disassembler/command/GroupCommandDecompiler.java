@@ -1,7 +1,6 @@
 package ru.zxspectrum.disassembler.command;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import ru.zxspectrum.disassembler.io.PushbackDataInputStream;
 import ru.zxspectrum.disassembler.render.element.CommandElement;
 
@@ -14,9 +13,8 @@ import java.util.List;
  * @Author: Maxim Gorin
  * Date: 26.02.2023
  */
+@Slf4j
 public class GroupCommandDecompiler implements CommandDecompiler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GroupCommandDecompiler.class);
-
     private List<CommandDecompiler> commandDecompilers = new LinkedList<>();
 
     @Override
@@ -34,7 +32,8 @@ public class GroupCommandDecompiler implements CommandDecompiler {
             try {
                  return commandDecompiler.decompile(new PushbackDataInputStream(new ByteArrayInputStream(commandData)));
             } catch (Exception e) {
-                LOGGER.debug(e.getMessage());
+                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
         return null;

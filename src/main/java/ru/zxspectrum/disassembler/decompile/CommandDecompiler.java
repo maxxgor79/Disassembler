@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.decompile;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.zxspectrum.disassembler.bytecode.ParamResult;
 import ru.zxspectrum.disassembler.util.ConverterUtil;
 import ru.zxspectrum.disassembler.util.TypeUtil;
@@ -13,6 +14,7 @@ import java.util.Scanner;
  * @Author: Maxim Gorin
  * Date: 02.03.2023
  */
+@Slf4j
 public class CommandDecompiler {
     private BigInteger address;
 

@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.command;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.zxspectrum.disassembler.decompile.DecompilerNamespace;
 import ru.zxspectrum.disassembler.render.element.CommandElement;
 import ru.zxspectrum.disassembler.settings.Settings;
@@ -13,6 +14,7 @@ import java.util.Map;
  * @Author: Maxim Gorin
  * Date: 26.02.2023
  */
+@Slf4j
 public class CommandDecompilerTable {
     private final Map<String, GroupCommandDecompiler> commandDecompilerMap = new HashMap<>();
 
