@@ -1,5 +1,7 @@
 package ru.zxspectrum.disassembler.util;
 
+import lombok.NonNull;
+
 import java.io.File;
 
 /**
@@ -11,13 +13,7 @@ public final class FileUtil {
 
     }
 
-    public static final File createNewFileSameName(File dir, File source, String ext) {
-        if (dir == null) {
-            throw new NullPointerException("dir");
-        }
-        if (source == null) {
-            throw new NullPointerException("source");
-        }
+    public static final File createNewFileSameName(@NonNull File dir, @NonNull File source, String ext) {
         String fileName = source.getName();
         int index = fileName.indexOf('.');
         if (index != -1) {

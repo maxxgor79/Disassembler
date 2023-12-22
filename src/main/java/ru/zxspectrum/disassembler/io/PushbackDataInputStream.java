@@ -1,5 +1,7 @@
 package ru.zxspectrum.disassembler.io;
 
+import lombok.Getter;
+import lombok.NonNull;
 import ru.zxspectrum.disassembler.lang.ByteOrder;
 import ru.zxspectrum.disassembler.lang.Type;
 
@@ -18,16 +20,14 @@ public class PushbackDataInputStream extends InputStream {
 
     private ByteOrder byteOrder;
 
+    @Getter
     private long readBytes;
 
     public PushbackDataInputStream(InputStream in) {
         this(in, null);
     }
 
-    public PushbackDataInputStream(InputStream in, ByteOrder byteOrder) {
-        if (in == null) {
-            throw new NullPointerException("in");
-        }
+    public PushbackDataInputStream(@NonNull InputStream in, ByteOrder byteOrder) {
         this.pis = new PushbackInputStream(in);
         if (byteOrder == null) {
             byteOrder = ByteOrder.LittleEndian;
@@ -45,7 +45,7 @@ public class PushbackDataInputStream extends InputStream {
         return ch;
     }
 
-    public final byte readByte() throws IOException {
+    public byte readByte() throws IOException {
         int ch = pis.read();
         if (ch < 0) {
             throw new EOFException();
@@ -54,7 +54,7 @@ public class PushbackDataInputStream extends InputStream {
         return (byte) (ch);
     }
 
-    public final int readUnsignedByte() throws IOException {
+    public int readUnsignedByte() throws IOException {
         int ch = pis.read();
         if (ch < 0) {
             throw new EOFException();
@@ -131,24 +131,26 @@ public class PushbackDataInputStream extends InputStream {
         return value;
     }
 
-    public BigInteger read(Type type) throws IOException {
-        if (type == null) {
-            throw new NullPointerException("type");
-        }
+    public BigInteger read(@NonNull Type type) throws IOException {
         BigInteger result = null;
         switch (type) {
-            case Int8 -> {result = BigInteger.valueOf(readByte());}
-            case UInt8 -> {result = BigInteger.valueOf(readUnsignedByte());}
-            case Int16 -> {result = BigInteger.valueOf(readShort());}
-            case UInt16 -> {result = BigInteger.valueOf(readUnsignedShort());}
-            case Int32, UInt32 -> {result = BigInteger.valueOf(readInt());}
-            case Int64, UInt64 -> {result = BigInteger.valueOf(readLong());}
+            case Int8 -> {
+                result = BigInteger.valueOf(readByte());
+            }
+            case UInt8 -> {
+                result = BigInteger.valueOf(readUnsignedByte());
+            }
+            case Int16 -> {
+                result = BigInteger.valueOf(readShort());
+            }
+            case UInt16 -> {
+                result = BigInteger.valueOf(readUnsignedShort());
+            }
+            case Int32, UInt32 -> {
+                result = BigInteger.valueOf(readInt());
+            }
         }
         return result;
-    }
-
-    public long getReadBytes() {
-        return readBytes;
     }
 
     public void unread(int b) throws IOException {
@@ -157,7 +159,6 @@ public class PushbackDataInputStream extends InputStream {
     }
 
     public void unread(byte[] data) throws IOException {
-        System.out.println("read:"+readBytes);
         pis.pushback(data);
         readBytes -= data.length;
     }

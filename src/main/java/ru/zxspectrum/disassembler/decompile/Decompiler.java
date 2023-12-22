@@ -1,6 +1,11 @@
 package ru.zxspectrum.disassembler.decompile;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.zxspectrum.disassembler.bytecode.ParamResult;
@@ -48,6 +53,9 @@ public class Decompiler implements DecompilerNamespace {
     private Settings settings;
     private CommandDecompilerTable commandDecompilerTable;
 
+    @Getter
+    @Setter(AccessLevel.PROTECTED)
+    @NonNull
     private BigInteger address = BigInteger.ZERO;
 
     private Map<BigInteger, LabelInfo> labelMap = new HashMap<>();
@@ -85,11 +93,7 @@ public class Decompiler implements DecompilerNamespace {
         }
     }
 
-    public void decompile(File file) throws IOException {
-        if (file == null) {
-            throw new NullPointerException("file");
-
-        }
+    public void decompile(@NonNull File file) throws IOException {
         if (this.commandDecompilerTable.size() == 0) {
             throw new DecompilerException("Command table is empty");
         }
@@ -135,13 +139,7 @@ public class Decompiler implements DecompilerNamespace {
             File destFile = save(file, elementList.generate());
             Output.println(Messages.getMessage(Messages.FILE_SAVED_IN), destFile.getAbsolutePath());
         } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (Exception e) {
-                    log.debug(e.getMessage());
-                }
-            }
+            IOUtils.close(fis);
         }
 
     }
@@ -159,13 +157,7 @@ public class Decompiler implements DecompilerNamespace {
             os.write(data);
             return destFile;
         } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (Exception e) {
-                    log.debug(e.getMessage());
-                }
-            }
+            IOUtils.close(os);
         }
     }
 
@@ -189,17 +181,8 @@ public class Decompiler implements DecompilerNamespace {
         elementList.add(line);
     }
 
-
     @Override
-    public BigInteger getAddress() {
-        return this.address;
-    }
-
-    @Override
-    public String addLabelAddress(BigInteger address, boolean required) {
-        if (address == null) {
-            throw new NullPointerException("address");
-        }
+    public String addLabelAddress(@NonNull BigInteger address, boolean required) {
         LabelInfo labelInfo = labelMap.get(address);
         if (labelInfo != null) {
             return labelInfo.getName();
@@ -210,25 +193,14 @@ public class Decompiler implements DecompilerNamespace {
     }
 
     @Override
-    public void addRequestedLabel(BigInteger address, String mask, Collection<ParamResult> params) {
-        if (address == null) {
-            throw new NullPointerException("address");
-        }
-        if (mask == null) {
-            throw new NullPointerException("mask");
-        }
-        if (params == null) {
-            throw new NullPointerException("params");
-        }
+    public void addRequestedLabel(@NonNull BigInteger address, @NonNull String mask
+            , @NonNull Collection<ParamResult> params) {
         CommandDecompiler commandDecompiler = new CommandDecompiler(this, address, mask, params);
         requestedLabelMap.put(address, commandDecompiler);
     }
 
     @Override
-    public String getLabel(BigInteger address) {
-        if (address == null) {
-            return null;
-        }
+    public String getLabel(@NonNull BigInteger address) {
         LabelInfo labelInfo = labelMap.get(address);
         if (labelInfo == null) {
             return null;
@@ -238,13 +210,6 @@ public class Decompiler implements DecompilerNamespace {
 
     private String generateLabelName() {
         return String.format("label_%0" + settings.getAddressDimension() + "d", labelIndex++);
-    }
-
-    protected void setAddress(BigInteger address) {
-        if (address == null) {
-            throw new NullPointerException("address");
-        }
-        this.address = address;
     }
 
     protected BigInteger incrementAddress(int d) {
@@ -301,21 +266,15 @@ public class Decompiler implements DecompilerNamespace {
     }
 
     static class LabelInfo {
+        @Getter(AccessLevel.PACKAGE)
         private String name;
 
+        @Getter(AccessLevel.PACKAGE)
         private boolean required;
 
-        LabelInfo(String name, boolean required) {
+        LabelInfo(@NonNull String name, boolean required) {
             this.name = name;
             this.required = required;
-        }
-
-        String getName() {
-            return name;
-        }
-
-        boolean isRequired() {
-            return required;
         }
     }
 }

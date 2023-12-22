@@ -1,5 +1,7 @@
 package ru.zxspectrum.disassembler.render;
 
+import lombok.NonNull;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,10 +11,7 @@ public class ElementList implements Render {
     private final LinkedList<Line> lines = new LinkedList<>();
 
 
-    public void add(Line ... lines) {
-        if (lines == null) {
-            throw new NullPointerException("line");
-        }
+    public void add(@NonNull Line ... lines) {
         this.lines.addAll(Arrays.asList(lines));
     }
 

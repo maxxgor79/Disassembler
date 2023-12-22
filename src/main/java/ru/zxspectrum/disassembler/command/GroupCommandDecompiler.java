@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.command;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import ru.zxspectrum.disassembler.io.PushbackDataInputStream;
 import ru.zxspectrum.disassembler.render.element.CommandElement;
@@ -23,10 +24,7 @@ public class GroupCommandDecompiler implements CommandDecompiler {
     }
 
     @Override
-    public CommandElement decompile(byte[] commandData) throws IOException {
-        if (commandData == null) {
-            throw new NullPointerException("commandData");
-        }
+    public CommandElement decompile(@NonNull byte[] commandData) throws IOException {
         //TODO to add byteCodeOrder
         for (CommandDecompiler commandDecompiler : commandDecompilers) {
             try {
@@ -39,10 +37,7 @@ public class GroupCommandDecompiler implements CommandDecompiler {
         return null;
     }
 
-    public boolean add(CommandDecompiler commandDecompiler) {
-        if (commandDecompiler == null) {
-            throw new NullPointerException("commandDecompiler");
-        }
+    public boolean add(@NonNull CommandDecompiler commandDecompiler) {
         return commandDecompilers.add(commandDecompiler);
     }
 

@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.decompile;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import ru.zxspectrum.disassembler.bytecode.ParamResult;
 import ru.zxspectrum.disassembler.util.ConverterUtil;
@@ -25,23 +26,11 @@ public class CommandDecompiler {
     private Collection<ParamResult> params;
 
 
-    public CommandDecompiler(DecompilerNamespace decompilerNamespace, BigInteger address
-            , String mask, Collection<ParamResult> params) {
-        if (decompilerNamespace == null) {
-            throw new NullPointerException("decompilerNamespace");
-        }
+    public CommandDecompiler(@NonNull DecompilerNamespace decompilerNamespace, @NonNull BigInteger address
+            , @NonNull String mask, @NonNull Collection<ParamResult> params) {
         this.decompilerNamespace = decompilerNamespace;
-        if (address == null) {
-            throw new NullPointerException("address");
-        }
         this.address = address;
-        if (mask == null) {
-            throw new NullPointerException("mask");
-        }
         this.mask = mask;
-        if (params == null) {
-            throw new NullPointerException("params");
-        }
         this.params = params;
     }
 

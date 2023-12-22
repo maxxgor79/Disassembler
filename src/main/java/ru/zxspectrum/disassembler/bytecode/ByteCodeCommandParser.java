@@ -1,7 +1,7 @@
 package ru.zxspectrum.disassembler.bytecode;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import ru.zxspectrum.disassembler.error.MatchException;
 import ru.zxspectrum.disassembler.error.ParserException;
 import ru.zxspectrum.disassembler.io.PushbackDataInputStream;
@@ -20,9 +20,8 @@ import java.util.List;
  * @Author: Maxim Gorin
  * Date: 25.02.2023
  */
+@Slf4j
 public class ByteCodeCommandParser {
-    private static final Logger logger = LoggerFactory.getLogger(ByteCodeCommandParser.class);
-
     private String codePattern;
 
     private ByteOrder byteOrder;
@@ -48,10 +47,7 @@ public class ByteCodeCommandParser {
         return parse(new PushbackDataInputStream(in, byteOrder));
     }
 
-    public Collection<ParamResult> parse(PushbackDataInputStream dis) throws IOException {
-        if (dis == null) {
-            throw new NullPointerException("dis");
-        }
+    public Collection<ParamResult> parse(@NonNull PushbackDataInputStream dis) throws IOException {
         List<ParamResult> paramList = new LinkedList<>();
         while (true) {
             if (isNextByte()) {

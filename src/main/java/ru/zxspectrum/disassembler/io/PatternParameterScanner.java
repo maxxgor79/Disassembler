@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.io;
 
+import lombok.NonNull;
 import ru.zxspectrum.disassembler.util.TypeUtil;
 
 import java.util.Iterator;
@@ -14,10 +15,7 @@ import java.util.stream.Stream;
 public class PatternParameterScanner {
     private Iterator<MatchResult> iter;
 
-    public PatternParameterScanner(String pattern) {
-        if (pattern == null) {
-            throw new NullPointerException("pattern");
-        }
+    public PatternParameterScanner(@NonNull String pattern) {
         Scanner scanner = new Scanner(pattern);
         this.iter = scanner.findAll("[$][aond]+").iterator();
     }

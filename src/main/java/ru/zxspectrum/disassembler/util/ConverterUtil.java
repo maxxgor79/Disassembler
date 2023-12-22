@@ -1,5 +1,7 @@
 package ru.zxspectrum.disassembler.util;
 
+import lombok.NonNull;
+
 import java.math.BigInteger;
 
 /**
@@ -11,10 +13,7 @@ public final class ConverterUtil {
 
     }
 
-    public static String toTextHexadecimal(BigInteger n, String prefix, String postfix) {
-        if (n == null) {
-            throw new NullPointerException("n");
-        }
+    public static String toTextHexadecimal(@NonNull BigInteger n, String prefix, String postfix) {
         StringBuilder sb = new StringBuilder();
         if (prefix != null) {
             sb.append(prefix);

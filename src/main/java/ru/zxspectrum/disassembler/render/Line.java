@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.render;
 
+import lombok.NonNull;
 import ru.zxspectrum.disassembler.render.element.AddressElement;
 import ru.zxspectrum.disassembler.render.element.EOLElement;
 import ru.zxspectrum.disassembler.render.element.Element;
@@ -24,11 +25,8 @@ public class Line implements Render {
         elementList.addAll(Arrays.asList(elements));
     }
 
-    public Line(AddressElement addressElement, Collection<Element> elements) {
+    public Line(AddressElement addressElement, @NonNull Collection<Element> elements) {
         this.addressElement = addressElement;
-        if (elements == null) {
-            throw new NullPointerException("elements");
-        }
         elementList.addAll(elements);
     }
 

@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.io;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import ru.zxspectrum.disassembler.command.PatternPair;
 import ru.zxspectrum.disassembler.error.ParserException;
@@ -44,15 +45,9 @@ public class PatternLoader {
         }
     }
 
-    public Collection<PatternPair> load(InputStream is, Charset charset) throws IOException {
-        if (is == null) {
-            throw new NullPointerException("is");
-        }
-        if (charset == null) {
-            throw new NullPointerException("charset");
-        }
+    public Collection<PatternPair> load(@NonNull InputStream is, @NonNull Charset charset) throws IOException {
         Scanner scanner = new Scanner(is, charset);
-        scanner.useDelimiter("[\t\n]");
+        scanner.useDelimiter("[\t\n]+");
         int lineNumber = 1;
         String codePattern = null;
         String commandPattern = null;

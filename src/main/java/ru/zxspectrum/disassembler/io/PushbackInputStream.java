@@ -1,5 +1,7 @@
 package ru.zxspectrum.disassembler.io;
 
+import lombok.NonNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,10 +18,7 @@ public class PushbackInputStream extends InputStream {
 
     private InputStream is;
 
-    public PushbackInputStream(InputStream is) {
-        if (is == null) {
-            throw new NullPointerException("is");
-        }
+    public PushbackInputStream(@NonNull InputStream is) {
         this.is = is;
     }
     @Override
@@ -40,10 +39,7 @@ public class PushbackInputStream extends InputStream {
         pushback(data, 0, data.length);
     }
 
-    public void pushback(byte []data, int off, int len) {
-        if (data == null) {
-            throw new NullPointerException("data");
-        }
+    public void pushback(@NonNull byte []data, int off, int len) {
         if (len < 0) {
             throw new IllegalArgumentException("len < 0");
         }
@@ -61,10 +57,7 @@ public class PushbackInputStream extends InputStream {
     }
 
     @Override
-    public int read(byte []data, int off, int len) throws IOException {
-        if (data == null) {
-            throw new NullPointerException("data");
-        }
+    public int read(@NonNull byte []data, int off, int len) throws IOException {
         if (len < 0) {
             throw new IllegalArgumentException("len < 0");
         }

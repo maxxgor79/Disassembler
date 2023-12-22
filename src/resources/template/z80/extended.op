@@ -50,11 +50,11 @@ ED4D	RETI
 ED4F	LD R,A
 ED5F	LD A,R
 ED6F	RLD
-ED43$aa	LD ($aa),BC
-ED53$aa	LD ($aa),DE
-ED63$aa	LD ($aa),HL
-ED73$aa	LD ($aa),SP
-ED4B$aa	LD BC,($aa)
-ED5B$aa	LD DE,($aa)
-ED6B$aa	LD HL,($aa)
-ED7B$aa	LD SP,($aa)
+ED43$nn	LD ($nn),BC
+ED53$nn	LD ($nn),DE
+ED63$nn	LD' ($nn),HL
+ED73$nn	LD ($nn),SP
+ED4B$nn	LD BC,($nn)
+ED5B$nn	LD DE,($nn)
+ED6B$nn	LD' HL,($nn)
+ED7B$nn	LD SP,($nn)

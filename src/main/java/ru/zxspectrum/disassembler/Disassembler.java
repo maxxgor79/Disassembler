@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -7,8 +8,6 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.zxspectrum.disassembler.decompile.Decompiler;
 import ru.zxspectrum.disassembler.i18n.Messages;
 import ru.zxspectrum.disassembler.io.Output;
@@ -167,7 +166,7 @@ public class Disassembler implements Settings {
         return Collections.emptyList();
     }
 
-    public void run(File... files) throws IOException {
+    public void run(@NonNull File... files) throws IOException {
         Output.println(createWelcome());
         Decompiler decompiler = new Decompiler(this);
         for (File file : files) {

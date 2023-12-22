@@ -1,5 +1,7 @@
 package ru.zxspectrum.disassembler.command;
 
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import ru.zxspectrum.disassembler.decompile.DecompilerNamespace;
 import ru.zxspectrum.disassembler.render.element.CommandElement;
@@ -22,23 +24,15 @@ public class CommandDecompilerTable {
 
     private DecompilerNamespace decompilerNamespace;
 
+    @Getter
     private int maxCommandSize;
 
-    public CommandDecompilerTable(Settings settings, DecompilerNamespace decompilerNamespace) {
-        if (settings == null) {
-            throw new NullPointerException("settings");
-        }
+    public CommandDecompilerTable(@NonNull Settings settings, @NonNull DecompilerNamespace decompilerNamespace) {
         this.settings = settings;
-        if (decompilerNamespace == null) {
-            throw new NullPointerException("decompilerNamespace");
-        }
         this.decompilerNamespace = decompilerNamespace;
     }
 
-    public boolean put(PatternPair patternPair) {
-        if (patternPair == null) {
-            throw new NullPointerException("patternPair");
-        }
+    public boolean put(@NonNull PatternPair patternPair) {
         String key = patternPair.getKey();
         GroupCommandDecompiler groupCommandDecompiler = commandDecompilerMap.get(key);
         if (groupCommandDecompiler == null) {
@@ -51,22 +45,13 @@ public class CommandDecompilerTable {
         return groupCommandDecompiler.add(commandDecompiler);
     }
 
-    public void putAll(Collection<PatternPair> col) {
-        if (col == null) {
-            throw new NullPointerException("col");
-        }
+    public void putAll(@NonNull Collection<PatternPair> col) {
         for (PatternPair patternPair : col) {
             put(patternPair);
         }
     }
 
-    public CommandElement generate(String byteCode, byte []commandData) throws IOException {
-        if (byteCode == null) {
-            throw new NullPointerException("col");
-        }
-        if (commandData == null) {
-            throw new NullPointerException("dis");
-        }
+    public CommandElement generate(@NonNull String byteCode, @NonNull byte []commandData) throws IOException {
         if (commandData.length == 0) {
             throw new IllegalArgumentException("commandData is empty");
         }
@@ -77,29 +62,19 @@ public class CommandDecompilerTable {
         return commandDecompiler.decompile(commandData);
     }
 
-    public CommandElement generate(byte [] data, byte []commandData) throws IOException {
-        if (data == null) {
-            throw new NullPointerException("data");
-        }
+    public CommandElement generate(@NonNull byte [] data,  byte []commandData) throws IOException {
         if (data.length == 0) {
             return null;
         }
         return generate(toString(data), commandData);
     }
 
-    public static String toString(byte []data) {
-        if (data == null) {
-            throw new NullPointerException("data");
-        }
+    public static String toString(@NonNull byte []data) {
         StringBuilder sb = new StringBuilder();
         for (byte b : data) {
             sb.append(String.format("%02X", b));
         }
         return sb.toString();
-    }
-
-    public int getMaxCommandSize() {
-        return maxCommandSize;
     }
 
     public int size() {

@@ -1,5 +1,7 @@
 package ru.zxspectrum.disassembler.util;
 
+import lombok.NonNull;
+
 /**
  * @Author: Maxim Gorin
  * Date: 25.02.2023
@@ -28,15 +30,9 @@ public final class SymbolUtil {
         return sb.toString();
     }
 
-    public static String replace(String s1, int index, String s2) {
-        if (s1 == null) {
-            throw new NullPointerException("s1");
-        }
+    public static String replace(@NonNull String s1, int index, @NonNull String s2) {
         if (index < 0) {
             throw new IllegalArgumentException("index is negative");
-        }
-        if (s2 == null) {
-            throw new NullPointerException("s2");
         }
         StringBuilder sb = new StringBuilder(s1);
         for (int i = 0; i < s2.length(); i++) {

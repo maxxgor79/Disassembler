@@ -1,5 +1,6 @@
 package ru.zxspectrum.disassembler.command;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import ru.zxspectrum.disassembler.bytecode.ByteCodeCommandParser;
 import ru.zxspectrum.disassembler.bytecode.ParamResult;
@@ -32,27 +33,15 @@ public class ParameterizedCommandDecompiler implements CommandDecompiler {
 
     private int size = -1;
 
-    public ParameterizedCommandDecompiler(PatternPair patternPair, Settings settings
-            , DecompilerNamespace decompilerNamespace) {
-        if (patternPair == null) {
-            throw new NullPointerException("patternPair");
-        }
+    public ParameterizedCommandDecompiler(@NonNull PatternPair patternPair, @NonNull Settings settings
+            , @NonNull DecompilerNamespace decompilerNamespace) {
         this.patternPair = patternPair;
-        if (settings == null) {
-            throw new NullPointerException("settings");
-        }
         this.settings = settings;
-        if (decompilerNamespace == null) {
-            throw new NullPointerException("decompileNamespace");
-        }
         this.decompilerNamespace = decompilerNamespace;
     }
 
     @Override
-    public CommandElement decompile(PushbackDataInputStream dis) throws IOException {
-        if (dis == null) {
-            throw new NullPointerException("dis");
-        }
+    public CommandElement decompile(@NonNull PushbackDataInputStream dis) throws IOException {
         ByteCodeCommandParser parser = new ByteCodeCommandParser(patternPair.getCodePattern()
                 , settings.getByteOrder());
         Collection<ParamResult> args = parser.parse(dis);
@@ -61,9 +50,6 @@ public class ParameterizedCommandDecompiler implements CommandDecompiler {
 
     @Override
     public CommandElement decompile(byte[] commandData) throws IOException {
-        if (commandData == null) {
-            throw new NullPointerException("commandData");
-        }
         return decompile(new PushbackDataInputStream(new ByteArrayInputStream(commandData)));
     }
 
@@ -80,7 +66,7 @@ public class ParameterizedCommandDecompiler implements CommandDecompiler {
                 } else {
                     if (byteCodeCommandParser.isNextParam()) {
                         Type type = byteCodeCommandParser.readParamType();
-                        size += Type.sizeOf(type);
+                        size += type.getSize();
                     } else {
                         break;
                     }
@@ -91,10 +77,7 @@ public class ParameterizedCommandDecompiler implements CommandDecompiler {
         return size;
     }
 
-    private String render(Collection<ParamResult> params) {
-        if (params == null) {
-            throw new NullPointerException("params");
-        }
+    private String render(@NonNull Collection<ParamResult> params) {
         String mask = patternPair.getCommandPattern();
         StringBuilder sb = new StringBuilder();
         Scanner scanner = new Scanner(mask);

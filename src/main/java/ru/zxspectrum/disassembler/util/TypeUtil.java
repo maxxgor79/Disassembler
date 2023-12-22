@@ -113,19 +113,10 @@ public final class TypeUtil {
                 }
             }
         }
-        switch(size) {
-            case 1: return signed ? Type.Int8 : Type.UInt8;
-            case 2: return signed ? Type.Int16 : Type.UInt16;
-            case 4: return signed ? Type.Int32 : Type.UInt32;
-            case 8: return signed ? Type.Int64 : Type.UInt64;
-        }
-        return Type.Unknown;
+        return signed ? Type.getSignedBySize(size) : Type.getUnsignedBySize(size);
     }
 
     private static boolean isPattern(String pattern, char patternLetter) {
-        if (pattern == null) {
-            throw new IllegalArgumentException("pattern is null");
-        }
         String name = pattern.toLowerCase();
         for (int i = 0; i < name.length(); i++) {
             if (name.charAt(i) != patternLetter) {
