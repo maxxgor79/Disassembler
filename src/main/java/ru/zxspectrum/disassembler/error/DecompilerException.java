@@ -3,7 +3,7 @@ package ru.zxspectrum.disassembler.error;
 import java.io.File;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 27.02.2023
  */
 public class DecompilerException extends DisassemblerException {

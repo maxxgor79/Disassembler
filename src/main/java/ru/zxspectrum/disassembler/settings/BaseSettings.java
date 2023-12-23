@@ -13,6 +13,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
+/**
+ * @author Maxim Gorin
+ */
 public class BaseSettings implements Settings {
     @Setter(AccessLevel.PROTECTED)
     private ByteOrder byteOrder;

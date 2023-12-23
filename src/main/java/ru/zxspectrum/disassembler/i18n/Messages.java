@@ -2,6 +2,9 @@ package ru.zxspectrum.disassembler.i18n;
 
 import java.util.ResourceBundle;
 
+/**
+ * @author Maxim Gorin
+ */
 public final class Messages {
 
     private Messages() {

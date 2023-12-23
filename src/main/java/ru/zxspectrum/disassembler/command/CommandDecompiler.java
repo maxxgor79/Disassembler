@@ -6,7 +6,7 @@ import ru.zxspectrum.disassembler.render.element.CommandElement;
 import java.io.IOException;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 25.02.2023
  */
 public interface CommandDecompiler {

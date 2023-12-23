@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 26.02.2023
  */
 @Slf4j

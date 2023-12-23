@@ -3,7 +3,7 @@ package ru.zxspectrum.disassembler.io;
 import ru.zxspectrum.disassembler.i18n.Messages;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 25.02.2023
  */
 public class Output {

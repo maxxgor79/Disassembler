@@ -3,7 +3,7 @@ package ru.zxspectrum.disassembler.util;
 import ru.zxspectrum.disassembler.lang.Type;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 25.02.2023
  */
 public final class TypeUtil {

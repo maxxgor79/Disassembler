@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 28.02.2023
  */
 public class PushbackInputStream extends InputStream {

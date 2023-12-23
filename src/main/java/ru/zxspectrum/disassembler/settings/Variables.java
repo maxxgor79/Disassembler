@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.math.BigInteger;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 01.03.2023
  */
 public final class Variables {

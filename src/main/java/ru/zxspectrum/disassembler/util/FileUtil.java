@@ -5,7 +5,7 @@ import lombok.NonNull;
 import java.io.File;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 01.03.2023
  */
 public final class FileUtil {

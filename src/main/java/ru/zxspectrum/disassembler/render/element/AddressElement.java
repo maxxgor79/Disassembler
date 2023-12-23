@@ -3,7 +3,7 @@ package ru.zxspectrum.disassembler.render.element;
 import java.math.BigInteger;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 01.03.2023
  */
 public class AddressElement extends TextElement {

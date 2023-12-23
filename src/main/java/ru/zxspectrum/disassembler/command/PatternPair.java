@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 25.02.2023
  */
 @EqualsAndHashCode

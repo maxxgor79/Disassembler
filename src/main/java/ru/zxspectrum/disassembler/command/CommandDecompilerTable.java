@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 26.02.2023
  */
 @Slf4j

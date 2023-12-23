@@ -11,6 +11,9 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * @author Maxim Gorin
+ */
 public class DefaultSettings implements Settings {
     protected static final ByteOrder BYTE_ORDER = ByteOrder.LittleEndian;
 

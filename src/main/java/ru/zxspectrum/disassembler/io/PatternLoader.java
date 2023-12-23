@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 25.02.2023
  */
 @Slf4j

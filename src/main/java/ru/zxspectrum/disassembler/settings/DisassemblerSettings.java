@@ -8,6 +8,9 @@ import ru.zxspectrum.disassembler.lang.ByteOrder;
 
 import java.math.BigInteger;
 
+/**
+ * @author Maxim Gorin
+ */
 @Slf4j
 public class DisassemblerSettings extends BaseSettings {
     public void load(@NonNull CommandLine cli) {

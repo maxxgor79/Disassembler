@@ -11,18 +11,18 @@ import org.apache.commons.cli.ParseException;
 import ru.zxspectrum.disassembler.decompile.Decompiler;
 import ru.zxspectrum.disassembler.i18n.Messages;
 import ru.zxspectrum.disassembler.io.Output;
-import ru.zxspectrum.disassembler.lang.ByteOrder;
 import ru.zxspectrum.disassembler.settings.DefaultSettings;
 import ru.zxspectrum.disassembler.settings.DisassemblerSettings;
 import ru.zxspectrum.disassembler.util.SymbolUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
+/**
+ * @author Maxim Gorin
+ */
 @Slf4j
 public class Disassembler {
     private DisassemblerSettings settings;

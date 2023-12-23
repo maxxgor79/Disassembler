@@ -1,7 +1,7 @@
 package ru.zxspectrum.disassembler.error;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 26.02.2023
  */
 public class MatchException extends ParserException {

@@ -6,8 +6,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.zxspectrum.disassembler.bytecode.ParamResult;
 import ru.zxspectrum.disassembler.command.CommandDecompilerTable;
 import ru.zxspectrum.disassembler.command.PatternPair;
@@ -43,7 +41,7 @@ import java.util.ListIterator;
 import java.util.Map;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 26.02.2023
  */
 @Slf4j
@@ -97,7 +95,7 @@ public class Decompiler implements DecompilerNamespace {
         if (this.commandDecompilerTable.size() == 0) {
             throw new DecompilerException("Command table is empty");
         }
-        resetSettings();
+        reset();
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(file);
@@ -161,7 +159,7 @@ public class Decompiler implements DecompilerNamespace {
         }
     }
 
-    private void resetSettings() {
+    private void reset() {
         labelMap.clear();
         elementList.clear();
         requestedLabelMap.clear();

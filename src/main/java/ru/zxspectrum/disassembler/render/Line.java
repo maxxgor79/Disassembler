@@ -11,6 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+/**
+ * @author Maxim Gorin
+ */
 public class Line implements Render {
 
     private AddressElement addressElement;

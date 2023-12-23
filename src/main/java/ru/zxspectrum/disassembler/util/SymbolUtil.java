@@ -3,7 +3,7 @@ package ru.zxspectrum.disassembler.util;
 import lombok.NonNull;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 25.02.2023
  */
 public final class SymbolUtil {

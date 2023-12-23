@@ -2,6 +2,9 @@ package ru.zxspectrum.disassembler.error;
 
 import java.io.File;
 
+/**
+ * @author Maxim Gorin
+ */
 public class RenderException extends DisassemblerException {
     public RenderException() {
     }

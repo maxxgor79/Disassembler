@@ -3,7 +3,7 @@ package ru.zxspectrum.disassembler.render.element;
 import javax.print.attribute.standard.MediaSize;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 02.03.2023
  */
 public class DbElement extends TextElement {

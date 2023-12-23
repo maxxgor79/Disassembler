@@ -1,7 +1,7 @@
 package ru.zxspectrum.disassembler.render.element;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 27.02.2023
  */
 public class CommandElement extends TextElement {

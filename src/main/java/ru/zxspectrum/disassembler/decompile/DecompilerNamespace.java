@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 28.02.2023
  */
 public interface DecompilerNamespace {

@@ -3,7 +3,7 @@ package ru.zxspectrum.disassembler.render.element;
 import java.math.BigInteger;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 25.02.2023
  */
 public class LineNumberElement implements Element {

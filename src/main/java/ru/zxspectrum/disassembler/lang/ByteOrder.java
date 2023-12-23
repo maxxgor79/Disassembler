@@ -1,7 +1,7 @@
 package ru.zxspectrum.disassembler.lang;
 
 /**
- * @Author Maxim Gorin
+ * @author Maxim Gorin
  */
 public enum ByteOrder {
     BigEndian, LittleEndian;

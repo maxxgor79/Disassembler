@@ -4,6 +4,9 @@ import ru.zxspectrum.disassembler.io.Output;
 
 import java.io.File;
 
+/**
+ * @author Maxim Gorin
+ */
 public class DisassemblerException extends RuntimeException {
 
     public DisassemblerException() {

@@ -5,7 +5,7 @@ import lombok.NonNull;
 import java.math.BigInteger;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 28.02.2023
  */
 public final class ConverterUtil {

@@ -7,6 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+/**
+ * @author Maxim Gorin
+ */
 public class ElementList implements Render {
     private final LinkedList<Line> lines = new LinkedList<>();
 

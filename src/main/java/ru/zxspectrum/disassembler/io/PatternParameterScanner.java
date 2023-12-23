@@ -9,7 +9,7 @@ import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 
 /**
- * @Author: Maxim Gorin
+ * @author Maxim Gorin
  * Date: 26.02.2023
  */
 public class PatternParameterScanner {
