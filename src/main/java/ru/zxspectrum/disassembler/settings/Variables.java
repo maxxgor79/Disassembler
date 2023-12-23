@@ -33,8 +33,9 @@ public final class Variables {
 
     public static final String COMMENT_TEMPLATE = "comment_template";
 
-    public static final String OUTPUT = "output";
+    public static final String OUTPUT_DIRECTORY = "output_directory";
 
+    public static final String CMD_FILENAME = "cmd_filename";
 
 
     public static int getInt(String name, int defaultValue) {

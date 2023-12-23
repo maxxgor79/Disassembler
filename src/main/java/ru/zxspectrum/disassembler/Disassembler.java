@@ -12,80 +12,57 @@ import ru.zxspectrum.disassembler.decompile.Decompiler;
 import ru.zxspectrum.disassembler.i18n.Messages;
 import ru.zxspectrum.disassembler.io.Output;
 import ru.zxspectrum.disassembler.lang.ByteOrder;
-import ru.zxspectrum.disassembler.settings.Settings;
-import ru.zxspectrum.disassembler.settings.Variables;
+import ru.zxspectrum.disassembler.settings.DefaultSettings;
+import ru.zxspectrum.disassembler.settings.DisassemblerSettings;
 import ru.zxspectrum.disassembler.util.SymbolUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
-public class Disassembler implements Settings {
-    private static String majorVersion = "1";
-
-    private static String minorVersion = "1";
-
-    private static String destEncoding = Charset.defaultCharset().name();
-
-    private static ByteOrder byteOrder = ByteOrder.LittleEndian;
-
-    private static BigInteger defaultAddress = BigInteger.ZERO;
-
-    private static BigInteger minAddress = BigInteger.ZERO;
-
-    private static BigInteger maxAddress = BigInteger.valueOf(65535);
-
-    private static String commentsTemplate = "";
-
-    private static List<String> templateList = new LinkedList<>();
-
-    private static int addressDimension = 4;
-
-    private static File outputDirectory = new File("output");
-
-    private static boolean visibleAddress;
-
+public class Disassembler {
+    private DisassemblerSettings settings;
 
     public Disassembler() {
-        loadSettings();
+
     }
 
-    private void loadSettings() {
+    public Disassembler(@NonNull DisassemblerSettings settings) {
+        setSettings(settings);
+    }
+
+    protected void setSettings(@NonNull DisassemblerSettings settings) {
+        this.settings = settings;
+    }
+
+    protected Collection<String> setCli(@NonNull final String[] args, @NonNull Options options) {
+        CommandLineParser parser = new DefaultParser();
         try {
-            Variables.load(Disassembler.class.getResourceAsStream("/settings.properties"));
-            majorVersion = Variables.getString(Variables.MAJOR_VERSION, majorVersion);
-            minorVersion = Variables.getString(Variables.MINOR_VERSION, minorVersion);
-            destEncoding = Variables.getString(Variables.DEST_ENCODING, destEncoding);
-            String value = Variables.getString(Variables.BYTE_ORDER, "little-endian");
-            byteOrder = "big-endian".equals(value) ? ByteOrder.BigEndian : ByteOrder.LittleEndian;
-            defaultAddress = Variables.getBigInteger(Variables.DEFAULT_ADDRESS, defaultAddress);
-            minAddress = Variables.getBigInteger(Variables.MIN_ADDRESS, minAddress);
-            maxAddress = Variables.getBigInteger(Variables.MAX_ADDRESS, maxAddress);
-            commentsTemplate = Variables.getString(Variables.COMMENT_TEMPLATE, commentsTemplate);
-            addressDimension = Variables.getInt(Variables.ADDRESS_DIMENSION, addressDimension);
-            for (int i = 0; i < 32; i++) {
-                value = Variables.getString(Variables.TEMPLATE + i, null);
-                if (value == null) {
-                    break;
-                }
-                templateList.add(value);
-            }
-            outputDirectory = new File(Variables.getString(Variables.OUTPUT, "output"));
-        } catch (Exception e) {
-            log.debug(e.getMessage());
+            CommandLine cli = parser.parse(options, args);
+            settings.load(cli);
+            return cli.getArgList();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
+        }
+        return Collections.emptyList();
+    }
+
+    public void run(@NonNull File... files) throws IOException {
+        Output.println(createWelcome());
+        Decompiler decompiler = new Decompiler(settings);
+        for (File file : files) {
+            decompiler.decompile(file);
         }
     }
 
-    private static String createWelcome() {
+    private String createWelcome() {
         StringBuilder sb = new StringBuilder();
-        String programWelcome = String.format(Messages.getMessage(Messages.PROGRAM_WELCOME), majorVersion
-                , minorVersion);
+        String programWelcome = String.format(Messages.getMessage(Messages.PROGRAM_WELCOME), settings.getMajorVersion()
+                , settings.getMinorVersion());
         String writtenBy = Messages.getMessage(Messages.WRITTEN_BY);
         String lineExternal = SymbolUtil.fillChar('*', 80);
         sb.append(lineExternal).append(System.lineSeparator());
@@ -101,21 +78,36 @@ public class Disassembler implements Settings {
 
     public static void main(String[] args) throws IOException {
         try {
-            Disassembler disassembler = new Disassembler();
+            final DisassemblerSettings settings = loadSettings();
+            final Disassembler disassembler = new Disassembler(settings);
             Options options = getOptions();
             if (args.length == 0) {
                 HelpFormatter formatter = new HelpFormatter();
-                formatter.printHelp("disassembler <file1>...<fileN>", options);
+                formatter.printHelp(settings.getCmdFilename() + " <file1>...<fileN>", options);
                 return;
             }
-            List<String> fileList = cliParsing(args, options);
-            for (String fileName : fileList) {
+            Collection<String> files = disassembler.setCli(args, options);
+            if (files.isEmpty()) {
+                Output.println("No input files");
+                return;
+            }
+            for (String fileName : files) {
                 disassembler.run(new File(fileName));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.debug(e.getMessage(), e);
+        }
+    }
+
+    protected static DisassemblerSettings loadSettings() {
+        final DisassemblerSettings settings = new DisassemblerSettings();
+        settings.merge(new DefaultSettings());
+        try {
+            settings.load(Disassembler.class.getResourceAsStream("/settings.properties"));
+        } catch (Exception e) {
             log.debug(e.getMessage());
         }
+        return settings;
     }
 
     private static Options getOptions() {
@@ -132,105 +124,5 @@ public class Disassembler implements Settings {
                 ": little-endian or big-endian.");
         options.addOption("v", "visible", false, "Show or not address in decompiled file.");
         return options;
-    }
-
-    private static List<String> cliParsing(String[] args, Options options) {
-        CommandLineParser parser = new DefaultParser();
-
-        try {
-            // parse the command line arguments
-            CommandLine cli = parser.parse(options, args);
-            if (cli.hasOption("a")) {
-                defaultAddress = new BigInteger(cli.getOptionValue("a"));
-            }
-            if (cli.hasOption("min")) {
-                minAddress = new BigInteger(cli.getOptionValue("min"));
-            }
-            if (cli.hasOption("max")) {
-                minAddress = new BigInteger(cli.getOptionValue("max"));
-            }
-            if (cli.hasOption("o")) {
-                outputDirectory = new File(cli.getOptionValue("o"));
-            }
-            if (cli.hasOption("b")) {
-                byteOrder = "big-endian".equals(cli.getOptionValue("b")) ? ByteOrder.BigEndian :
-                        ByteOrder.LittleEndian;
-            }
-            if (cli.hasOption("v")) {
-                visibleAddress = true;
-            }
-            return cli.getArgList();
-        } catch (ParseException e) {
-            log.debug(e.getMessage());
-        }
-        return Collections.emptyList();
-    }
-
-    public void run(@NonNull File... files) throws IOException {
-        Output.println(createWelcome());
-        Decompiler decompiler = new Decompiler(this);
-        for (File file : files) {
-            decompiler.decompile(file);
-        }
-    }
-
-    @Override
-    public ByteOrder getByteOrder() {
-        return byteOrder;
-    }
-
-    @Override
-    public int getAddressDimension() {
-        return addressDimension;
-    }
-
-    @Override
-    public String getMinorVersion() {
-        return minorVersion;
-    }
-
-    @Override
-    public String getMajorVersion() {
-        return majorVersion;
-    }
-
-    @Override
-    public String getDestEncoding() {
-        return destEncoding;
-    }
-
-    @Override
-    public BigInteger getDefaultAddress() {
-        return defaultAddress;
-    }
-
-    @Override
-    public BigInteger getMinAddress() {
-        return minAddress;
-    }
-
-    @Override
-    public BigInteger getMaxAddress() {
-        return maxAddress;
-    }
-
-    @Override
-    public String getCommentsTemplate() {
-        return commentsTemplate;
-    }
-
-    @Override
-    public Collection<String> getTemplates() {
-        return templateList;
-    }
-
-    @Override
-    public File getOutputDirectory() {
-        return outputDirectory;
-    }
-
-    @Override
-    public boolean isAddressVisible() {
-        return visibleAddress;
     }
 }

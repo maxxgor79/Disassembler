@@ -3,6 +3,8 @@ package ru.zxspectrum.disassembler.settings;
 import ru.zxspectrum.disassembler.lang.ByteOrder;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.Collection;
 
@@ -11,27 +13,33 @@ import java.util.Collection;
  * Date: 28.02.2023
  */
 public interface Settings {
-    public ByteOrder getByteOrder();
+    ByteOrder getByteOrder();
 
-    public int getAddressDimension();
+    int getAddressDimension();
 
-    public String getMinorVersion();
+    String getMinorVersion();
 
-    public String getMajorVersion();
+    String getMajorVersion();
 
-    public String getDestEncoding();
+    String getDestEncoding();
 
-    public BigInteger getDefaultAddress();
+    BigInteger getDefaultAddress();
 
-    public BigInteger getMinAddress();
+    BigInteger getMinAddress();
 
-    public BigInteger getMaxAddress();
+    BigInteger getMaxAddress();
 
-    public String getCommentsTemplate();
+    String getCommentsTemplate();
 
-    public Collection<String> getTemplates();
+    Collection<String> getTemplates();
 
-    public File getOutputDirectory();
+    File getOutputDirectory();
 
-    public boolean isAddressVisible();
+    boolean isAddressVisible();
+
+    String getCmdFilename();
+
+    void load(InputStream is) throws IOException;
+
+    void merge(Settings settings);
 }
